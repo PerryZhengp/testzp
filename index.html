@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>下100层 - Browser Edition</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <header class="topbar">
+        <h1>下100层</h1>
+        <p>键盘: A/D 或 ←/→，失败后按 R 重开</p>
+      </header>
+
+      <section class="game-shell" aria-label="game container">
+        <canvas id="game" width="420" height="640" aria-label="down 100 floors game"></canvas>
+        <div class="legend">
+          <span><i class="dot normal"></i> 普通平台</span>
+          <span><i class="dot fragile"></i> 脆弱平台</span>
+          <span><i class="dot spike"></i> 尖刺平台</span>
+        </div>
+      </section>
+    </main>
+
+    <script src="./game.js"></script>
+  </body>
+</html>
