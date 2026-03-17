@@ -33,9 +33,9 @@
           <collectionProp name="Arguments.arguments"/>
         </elementProp>
         <stringProp name="HTTPSampler.domain">${__P(base.host,192.168.0.90)}</stringProp>
-        <stringProp name="HTTPSampler.port">${__P(base.port,9999)}</stringProp>
+        <stringProp name="HTTPSampler.port">${__P(base.port,80)}</stringProp>
         <stringProp name="HTTPSampler.protocol">${__P(base.protocol,http)}</stringProp>
-        <stringProp name="HTTPSampler.path">${__P(base.path,)}</stringProp>
+        <stringProp name="HTTPSampler.path">${__P(base.path,/api)}</stringProp>
         <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
         <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
         <stringProp name="HTTPSampler.connect_timeout"></stringProp>
@@ -61,7 +61,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">${__P(functional.loops,1)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','functional']) ? props.get('functional.threads','4') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy(def rp=props['run.profile']?:'all'; (rp=='all' || rp=='functional') ? (props['functional.threads']?:'4') : '0')}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(functional.rampup,2)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -76,9 +76,10 @@
           <stringProp name="variableNames">username,password,mac</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="recycle">true</boolProp>
           <boolProp name="stopThread">false</boolProp>
-          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
         </CSVDataSet>
         <hashTree/>
         <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - Load Mapping &amp; Runtime Vars" enabled="true">
@@ -90,10 +91,10 @@
 import java.nio.file.Paths
 import java.nio.charset.StandardCharsets
 
-def map = props.getObject('accountReportMap')
+def map = props.get('accountReportMap')
 if (map == null) {
   map = [:]
-  def mappingPath = props.get('mapping.file', 'jmeter/data/account_report_mapping.csv')
+  def mappingPath = (props['mapping.file'] ?: 'jmeter/data/account_report_mapping.csv')
   def fullPath = Paths.get(mappingPath)
   if (!fullPath.isAbsolute()) {
     fullPath = Paths.get(System.getProperty('user.dir')).resolve(mappingPath)
@@ -107,15 +108,15 @@ if (map == null) {
       map[u] = r
     }
   }
-  props.putObject('accountReportMap', map)
+  props.put('accountReportMap', map)
 }
 
-vars.put('courseId', props.get('courseId', '2032055666142167042'))
-vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
-vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
-vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
-vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
-vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))
+vars.put('courseId', (props['courseId'] ?: '2032055666142167042'))
+vars.put('teachingTaskId', (props['teachingTaskId'] ?: '2033505568785190913'))
+vars.put('blockId', (props['blockId'] ?: '3O00nCpPKp'))
+vars.put('authPrefix', (props['auth.prefix'] ?: 'Bearer '))
+vars.put('clientKeyHeader', (props['clientKey'] ?: 'test-client'))
+vars.put('clientVersionHeader', (props['clientVersion'] ?: 'V1.0'))
 
 def username = vars.get('username') ?: ''
 def mapped = map[username] ?: ''
@@ -149,19 +150,26 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp>
+                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - random 11 digits" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
+long generatedMac = ThreadLocalRandom.current().nextLong(10000000000L, 100000000000L)
+vars.put('runtimeMac', String.valueOf(generatedMac))</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - accessToken/refreshToken" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">accessToken;refreshToken</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken;$.data.refreshToken</stringProp>
@@ -201,7 +209,7 @@ if (!(vars.get('accessToken') ?: '').trim()) {
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -229,7 +237,7 @@ if (!(vars.get('accessToken') ?: '').trim()) {
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -271,7 +279,7 @@ vars.put('preconditionMissing', effective ? 'false' : 'true')</stringProp>
         </hashTree>
 
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="IF - userReportId available" enabled="true">
-          <stringProp name="IfController.condition">${__groovy((vars.get('effectiveUserReportId') ?: '').trim().length() &gt; 0,)}</stringProp>
+          <stringProp name="IfController.condition">${__groovy((vars.get('effectiveUserReportId') ?: '').trim().length() &gt; 0)}</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
           <boolProp name="IfController.useExpression">true</boolProp>
         </IfController>
@@ -280,7 +288,7 @@ vars.put('preconditionMissing', effective ? 'false' : 'true')</stringProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookCatalog?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryExpGuidebookCatalog?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -308,7 +316,7 @@ vars.put('preconditionMissing', effective ? 'false' : 'true')</stringProp>
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${effectiveUserReportId}</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${effectiveUserReportId}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -365,60 +373,81 @@ if (single) {
               </collectionProp>
             </elementProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build payload - Random unique subtitleanswer (dynamic+fallback)" enabled="true">
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build payload - questionAnswerList with fixed subtitleId" enabled="true">
               <stringProp name="scriptLanguage">groovy</stringProp>
               <stringProp name="script">import groovy.json.JsonOutput
 def username = vars.get('username') ?: 'unknown'
 def seed = username + '_' + ctx.getThreadNum() + '_' + vars.getIteration() + '_' + System.currentTimeMillis()
 def rnd = new Random((seed.hashCode() as long) ^ System.nanoTime())
-def min = Integer.parseInt(props.get('answer.min', '1'))
-def max = Integer.parseInt(props.get('answer.max', '99'))
+def min = Integer.parseInt((props['answer.min'] ?: '1'))
+def max = Integer.parseInt((props['answer.max'] ?: '9999'))
 def nextNumber = { -&gt; (rnd.nextInt(max - min + 1) + min).toString() }
-def n1 = nextNumber()
-def n2 = nextNumber()
-def n3 = nextNumber()
-while (n2 == n1) { n2 = nextNumber() }
-while (n3 == n1 || n3 == n2) { n3 = nextNumber() }
-def values = [n1, n2, n3]
-def subtitleMap = [:]
-def mode = (props.get('answer.payload.mode', 'hybrid') ?: 'hybrid').toLowerCase()
-def ids = (vars.get('gapInputIdsCsv') ?: '').split(',').findAll { it?.trim() }
-def useDynamic = (mode == 'dynamic' || mode == 'hybrid') &amp;&amp; ids
-if (useDynamic) {
-  ids.eachWithIndex { id, idx -&gt; subtitleMap[id] = values[idx % values.size()] }
-  vars.put('questionIdForAnswer', vars.get('gapQuestionId') ?: props.get('answer.fallback.questionId', 'YndHSdJkXa'))
-} else {
-  subtitleMap[props.get('answer.fallback.subtitle.key1', 'sub1')] = n1
-  subtitleMap[props.get('answer.fallback.subtitle.key2', 'sub2')] = n2
-  subtitleMap[props.get('answer.fallback.subtitle.key3', 'sub3')] = n3
-  vars.put('questionIdForAnswer', props.get('answer.fallback.questionId', 'YndHSdJkXa'))
+def gapSubtitleIds = [
+  (props['answer.fallback.gap.subtitle.id1'] ?: 'ribcrlV6xK'),
+  (props['answer.fallback.gap.subtitle.id2'] ?: 'Uv9NC4virf'),
+  (props['answer.fallback.gap.subtitle.id3'] ?: 'lHBYTCtXty')
+].collect { it?.toString()?.trim() }.findAll { it }
+if (!gapSubtitleIds) {
+  gapSubtitleIds = ['ribcrlV6xK', 'Uv9NC4virf', 'lHBYTCtXty']
 }
-def subtitleJson = JsonOutput.toJson(subtitleMap)
-vars.put('subtitleanswer', subtitleJson)
-vars.put('subtitleanswerSeed', seed)
-def answerValue = subtitleMap.values().join('|')
-vars.put('answer', answerValue)
-def payload = [
-  courseId: vars.get('courseId'),
-  teachingTaskId: vars.get('teachingTaskId'),
-  blockId: vars.get('blockId'),
-  userReportId: vars.get('effectiveUserReportId'),
-  questionId: vars.get('questionIdForAnswer'),
-  answer: answerValue,
-  subtitleanswer: subtitleMap
+def targetCount = Math.max(gapSubtitleIds.size(), 3)
+def lastSignature = vars.get('lastAnswerSignatureFunc') ?: ''
+def signature = ''
+def gapSubtitleAnswerList = []
+int guard = 0
+while (true) {
+  guard++
+  def randomValues = []
+  def seen = [] as Set
+  while (randomValues.size() &lt; targetCount) {
+    def candidate = nextNumber()
+    if (seen.add(candidate) || seen.size() &gt;= (max - min + 1)) {
+      randomValues &lt;&lt; candidate
+    }
+  }
+  gapSubtitleAnswerList = []
+  gapSubtitleIds.eachWithIndex { sid, idx -&gt;
+    gapSubtitleAnswerList &lt;&lt; [subtitleId: sid, subtitleAnswer: randomValues[idx % randomValues.size()]]
+  }
+  signature = gapSubtitleAnswerList.collect { item -&gt; "${item.subtitleId}:${item.subtitleAnswer}" }.join('|')
+  if (signature != lastSignature || guard &gt;= 8) {
+    break
+  }
+}
+vars.put('lastAnswerSignatureFunc', signature)
+vars.put('answerSignature', signature)
+def singleBlockId = vars.get('singleQuestionId') ?: (props['answer.fallback.single.blockId'] ?: 'oaXh7gOyKt')
+def singleAnswer = vars.get('singleChoiceReference') ?: (props['answer.fallback.single.choice'] ?: 'uD2mKpkAmc')
+def singleSubtitleId = (props['answer.fallback.single.subtitleId'] ?: '')
+def gapBlockId = vars.get('gapQuestionId') ?: (props['answer.fallback.gap.blockId'] ?: 'YndHSdJkXa')
+def questionAnswerList = [
+  [
+    blockId: singleBlockId,
+    blockType: (props['answer.fallback.single.blockType'] ?: 'SingleChoice'),
+    subtitleAnswerList: [[subtitleId: singleSubtitleId, subtitleAnswer: singleAnswer]]
+  ],
+  [
+    blockId: gapBlockId,
+    blockType: (props['answer.fallback.gap.blockType'] ?: 'GapFilling'),
+    subtitleAnswerList: gapSubtitleAnswerList
+  ]
 ]
-vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))
+vars.put('subtitleanswerSeed', seed)
+vars.put('saveQuestionAnswerBody', JsonOutput.toJson([
+  userReportId: vars.get('effectiveUserReportId'),
+  questionAnswerList: questionAnswerList
+]))
 def recordPayload = [
   courseId: vars.get('courseId'),
   teachingTaskId: vars.get('teachingTaskId'),
   blockId: vars.get('blockId'),
   userReportId: vars.get('effectiveUserReportId'),
   answerRecord: JsonOutput.toJson([
-    subtitleanswer: subtitleMap,
+    questionAnswerList: questionAnswerList,
     seed: seed,
     user: username,
     ts: System.currentTimeMillis()
@@ -458,7 +487,7 @@ vars.put('saveExpAnswerRecordBody', JsonOutput.toJson(recordPayload))</stringPro
               </collectionProp>
             </elementProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <stringProp name="HTTPSampler.path">/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -486,7 +515,7 @@ vars.put('saveExpAnswerRecordBody', JsonOutput.toJson(recordPayload))</stringPro
         </hashTree>
 
         <IfController guiclass="IfControllerPanel" testclass="IfController" testname="IF - userReportId missing" enabled="true">
-          <stringProp name="IfController.condition">${__groovy((vars.get('effectiveUserReportId') ?: '').trim().length() == 0,)}</stringProp>
+          <stringProp name="IfController.condition">${__groovy((vars.get('effectiveUserReportId') ?: '').trim().length() == 0)}</stringProp>
           <boolProp name="IfController.evaluateAll">false</boolProp>
           <boolProp name="IfController.useExpression">true</boolProp>
         </IfController>
@@ -505,7 +534,7 @@ SampleResult.setResponseData('PRECONDITION_MISSING', 'UTF-8')</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/quitTeachingTask?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/exp/v1/quitTeachingTask?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -533,7 +562,7 @@ SampleResult.setResponseData('PRECONDITION_MISSING', 'UTF-8')</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/quitCourse?courseId=${courseId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/exp/v1/quitCourse?courseId=${courseId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -568,7 +597,7 @@ SampleResult.setResponseData('PRECONDITION_MISSING', 'UTF-8')</stringProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/logout</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/logout</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -611,7 +640,7 @@ if (prev.getResponseCode() == '500' || body.contains('NullPointerException') || 
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','functional']) ? props.get('keepalive.threads','1') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy(def rp=props['run.profile']?:'all'; (rp=='all' || rp=='functional') ? (props['keepalive.threads']?:'1') : '0')}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(keepalive.rampup,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <longProp name="ThreadGroup.start_time">1710000000000</longProp>
@@ -624,18 +653,19 @@ if (prev.getResponseCode() == '500' || body.contains('NullPointerException') || 
           <stringProp name="variableNames">username,password,mac</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="recycle">true</boolProp>
           <boolProp name="stopThread">false</boolProp>
-          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
         </CSVDataSet>
         <hashTree/>
         <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - keepalive vars" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="script">vars.put('courseId', props.get('courseId', '2032055666142167042'))
-vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
-vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
-vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
-vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
+          <stringProp name="script">vars.put('courseId', (props['courseId'] ?: '2032055666142167042'))
+vars.put('teachingTaskId', (props['teachingTaskId'] ?: '2033505568785190913'))
+vars.put('authPrefix', (props['auth.prefix'] ?: 'Bearer '))
+vars.put('clientKeyHeader', (props['clientKey'] ?: 'test-client'))
+vars.put('clientVersionHeader', (props['clientVersion'] ?: 'V1.0'))</stringProp>
         </JSR223Sampler>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - Common Client Headers" enabled="true">
@@ -660,22 +690,39 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp>
+                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - random 11 digits" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
+long generatedMac = ThreadLocalRandom.current().nextLong(10000000000L, 100000000000L)
+vars.put('runtimeMac', String.valueOf(generatedMac))</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - accessToken" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
           </JSONPostProcessor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - keepalive login code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+              <stringProp name="2">accessToken</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
           <hashTree/>
         </hashTree>
         <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop - heartbeat every 10s" enabled="true">
@@ -694,7 +741,7 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
               </collectionProp>
             </elementProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -718,7 +765,7 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
             <hashTree/>
           </hashTree>
           <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Timer - 10s interval" enabled="true">
-            <stringProp name="ConstantTimer.delay">${__groovy((props.get('keepalive.interval.seconds','10') as int) * 1000,)}</stringProp>
+            <stringProp name="ConstantTimer.delay">${__groovy(((props['keepalive.interval.seconds']?:'10') as int) * 1000)}</stringProp>
           </ConstantTimer>
           <hashTree/>
         </hashTree>
@@ -727,7 +774,7 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -745,7 +792,7 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
         <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Pause - wait token expire window" enabled="true">
           <intProp name="ActionProcessor.action">1</intProp>
           <intProp name="ActionProcessor.target">0</intProp>
-          <stringProp name="ActionProcessor.duration">${__groovy((props.get('keepalive.expire.wait.seconds','35') as int) * 1000,)}</stringProp>
+          <stringProp name="ActionProcessor.duration">${__groovy(((props['keepalive.expire.wait.seconds']?:'35') as int) * 1000)}</stringProp>
         </TestAction>
         <hashTree/>
 
@@ -753,7 +800,7 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -779,7 +826,7 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -798,7 +845,7 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -844,7 +891,7 @@ if (label.contains('[EXPECT_FAIL]') &amp;&amp; code == 0) {
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">${__P(exception.loops,1)}</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','functional']) ? props.get('exception.threads','1') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy(def rp=props['run.profile']?:'all'; (rp=='all' || rp=='functional') ? (props['exception.threads']?:'1') : '0')}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(exception.rampup,1)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <longProp name="ThreadGroup.start_time">1710000000000</longProp>
@@ -857,9 +904,10 @@ if (label.contains('[EXPECT_FAIL]') &amp;&amp; code == 0) {
           <stringProp name="variableNames">username,password,mac</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="recycle">true</boolProp>
           <boolProp name="stopThread">false</boolProp>
-          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
         </CSVDataSet>
         <hashTree/>
         <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - exception vars + cross report id" enabled="true">
@@ -867,10 +915,10 @@ if (label.contains('[EXPECT_FAIL]') &amp;&amp; code == 0) {
           <stringProp name="script">import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.charset.StandardCharsets
-def map = props.getObject('accountReportMap')
+def map = props.get('accountReportMap')
 if (map == null) {
   map = [:]
-  def mappingPath = props.get('mapping.file', 'jmeter/data/account_report_mapping.csv')
+  def mappingPath = (props['mapping.file'] ?: 'jmeter/data/account_report_mapping.csv')
   def fullPath = Paths.get(mappingPath)
   if (!fullPath.isAbsolute()) fullPath = Paths.get(System.getProperty('user.dir')).resolve(mappingPath)
   if (Files.exists(fullPath)) {
@@ -880,14 +928,14 @@ if (map == null) {
       map[arr[0].trim()] = arr.length &gt; 1 ? arr[1].trim() : ''
     }
   }
-  props.putObject('accountReportMap', map)
+  props.put('accountReportMap', map)
 }
-vars.put('courseId', props.get('courseId', '2032055666142167042'))
-vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
-vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
-vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
-vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
-vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))
+vars.put('courseId', (props['courseId'] ?: '2032055666142167042'))
+vars.put('teachingTaskId', (props['teachingTaskId'] ?: '2033505568785190913'))
+vars.put('blockId', (props['blockId'] ?: '3O00nCpPKp'))
+vars.put('authPrefix', (props['auth.prefix'] ?: 'Bearer '))
+vars.put('clientKeyHeader', (props['clientKey'] ?: 'test-client'))
+vars.put('clientVersionHeader', (props['clientVersion'] ?: 'V1.0'))
 def username = vars.get('username') ?: ''
 def mapped = map[username] ?: ''
 vars.put('mappedUserReportId', mapped)
@@ -910,16 +958,23 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument">
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp>
+                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - random 11 digits" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
+long generatedMac = ThreadLocalRandom.current().nextLong(10000000000L, 100000000000L)
+vars.put('runtimeMac', String.valueOf(generatedMac))</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - clientKey/clientVersion" enabled="true">
             <collectionProp name="HeaderManager.headers">
               <elementProp name="clientKey" elementType="Header">
@@ -944,14 +999,14 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-NoAuth-QueryCourseList [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree/>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-EmptyToken-QueryCourseList [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -968,7 +1023,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-FakeToken-QueryCourseList [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -994,7 +1049,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/logout</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/logout</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1019,7 +1074,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-ReuseToken-AfterLogout [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1036,7 +1091,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-courseId-empty [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=&amp;teachingTaskId=${teachingTaskId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1050,7 +1105,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-courseId-illegal [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=INVALID-COURSE&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=INVALID-COURSE&amp;teachingTaskId=${teachingTaskId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1062,7 +1117,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-teachingTaskId-empty [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1074,7 +1129,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-teachingTaskId-illegal [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=INVALID-TASK</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=INVALID-TASK</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1086,7 +1141,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-userReportId-empty [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1096,7 +1151,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-blockId-empty [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=&amp;userReportId=${mappedUserReportId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=&amp;userReportId=${mappedUserReportId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1115,7 +1170,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/logout</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/logout</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1134,7 +1189,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1155,7 +1210,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1172,7 +1227,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientVersion-V1.0 [EXPECT_OK]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1183,7 +1238,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientVersion-v1.0 [EXPECT_OK]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1194,7 +1249,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientVersion-1.0.0 [EXPECT_OK]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1204,7 +1259,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
 
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-CrossAccount-QueryContent [EXPECT_FAIL]" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${crossUserReportId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${crossUserReportId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1223,7 +1278,7 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1231,18 +1286,36 @@ vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="script">import groovy.json.JsonOutput
 def rnd = new Random(System.nanoTime())
-def a1 = (rnd.nextInt(89) + 10).toString()
-def a2 = (rnd.nextInt(89) + 10).toString()
-def a3 = (rnd.nextInt(89) + 10).toString()
-def subtitle = [sub1:a1, sub2:a2, sub3:a3]
+def min = Integer.parseInt((props['answer.min'] ?: '1'))
+def max = Integer.parseInt((props['answer.max'] ?: '9999'))
+def nextNumber = { -&gt; (rnd.nextInt(max - min + 1) + min).toString() }
+def a1 = nextNumber()
+def a2 = nextNumber()
+while (a2 == a1) a2 = nextNumber()
+def a3 = nextNumber()
+while (a3 == a1 || a3 == a2) a3 = nextNumber()
+def questionAnswerList = [
+  [
+    blockId: (props['answer.fallback.single.blockId'] ?: 'oaXh7gOyKt'),
+    blockType: (props['answer.fallback.single.blockType'] ?: 'SingleChoice'),
+    subtitleAnswerList: [[
+      subtitleId: (props['answer.fallback.single.subtitleId'] ?: ''),
+      subtitleAnswer: (props['answer.fallback.single.choice'] ?: 'uD2mKpkAmc')
+    ]]
+  ],
+  [
+    blockId: (props['answer.fallback.gap.blockId'] ?: 'YndHSdJkXa'),
+    blockType: (props['answer.fallback.gap.blockType'] ?: 'GapFilling'),
+    subtitleAnswerList: [
+      [subtitleId: (props['answer.fallback.gap.subtitle.id1'] ?: 'ribcrlV6xK'), subtitleAnswer: a1],
+      [subtitleId: (props['answer.fallback.gap.subtitle.id2'] ?: 'Uv9NC4virf'), subtitleAnswer: a2],
+      [subtitleId: (props['answer.fallback.gap.subtitle.id3'] ?: 'lHBYTCtXty'), subtitleAnswer: a3]
+    ]
+  ]
+]
 def payload = [
-  courseId: vars.get('courseId'),
-  teachingTaskId: vars.get('teachingTaskId'),
-  blockId: vars.get('blockId'),
   userReportId: vars.get('crossUserReportId'),
-  questionId: props.get('answer.fallback.questionId', 'YndHSdJkXa'),
-  answer: subtitle.values().join('|'),
-  subtitleanswer: subtitle
+  questionAnswerList: questionAnswerList
 ]
 vars.put('crossSaveQuestionAnswerBody', JsonOutput.toJson(payload))
 def recordPayload = [
@@ -1250,7 +1323,7 @@ def recordPayload = [
   teachingTaskId: vars.get('teachingTaskId'),
   blockId: vars.get('blockId'),
   userReportId: vars.get('crossUserReportId'),
-  answerRecord: JsonOutput.toJson([subtitleanswer: subtitle, ts: System.currentTimeMillis()])
+  answerRecord: JsonOutput.toJson([questionAnswerList: questionAnswerList, ts: System.currentTimeMillis()])
 ]
 vars.put('crossSaveExpAnswerRecordBody', JsonOutput.toJson(recordPayload))</stringProp>
           </JSR223PreProcessor>
@@ -1270,7 +1343,7 @@ vars.put('crossSaveExpAnswerRecordBody', JsonOutput.toJson(recordPayload))</stri
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1309,7 +1382,7 @@ if (label.contains('[EXPECT_OK]') &amp;&amp; code != 0) {
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">-1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','perf_login']) ? props.get('perf.login.threads','8') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy(def rp=props['run.profile']?:'all'; (rp=='all' || rp=='perf_login') ? (props['perf.login.threads']?:'8') : '0')}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(perf.login.rampup,10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(perf.login.duration.seconds,300)}</stringProp>
@@ -1324,9 +1397,10 @@ if (label.contains('[EXPECT_OK]') &amp;&amp; code != 0) {
           <stringProp name="variableNames">username,password,mac</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="recycle">true</boolProp>
           <boolProp name="stopThread">false</boolProp>
-          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
         </CSVDataSet>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - login perf" enabled="true">
@@ -1337,26 +1411,22 @@ if (label.contains('[EXPECT_OK]') &amp;&amp; code != 0) {
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Login" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-001-login" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - avoid occupied device" enabled="true">
             <stringProp name="scriptLanguage">groovy</stringProp>
-            <stringProp name="script">try {
-  def base = new BigInteger(vars.get('mac') ?: '1234567890123456789')
-  def delta = (ctx.getThreadNum() + 1L) * 100000L + (vars.getIteration() as long)
-  vars.put('runtimeMac', base.add(BigInteger.valueOf(delta)).toString())
-} catch (Exception e) {
-  vars.put('runtimeMac', vars.get('mac') ?: '1234567890123456789')
-}</stringProp>
+            <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
+long generatedMac = ThreadLocalRandom.current().nextLong(10000000000L, 100000000000L)
+vars.put('runtimeMac', String.valueOf(generatedMac))</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert - login perf non 500" enabled="true">
@@ -1377,7 +1447,7 @@ if (label.contains('[EXPECT_OK]') &amp;&amp; code != 0) {
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">-1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','perf_answer']) ? props.get('perf.answer.threads','8') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy(def rp=props['run.profile']?:'all'; (rp=='all' || rp=='perf_answer') ? (props['perf.answer.threads']?:'8') : '0')}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(perf.answer.rampup,10)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(perf.answer.duration.seconds,600)}</stringProp>
@@ -1392,19 +1462,20 @@ if (label.contains('[EXPECT_OK]') &amp;&amp; code != 0) {
           <stringProp name="variableNames">username,password,mac</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="recycle">true</boolProp>
           <boolProp name="stopThread">false</boolProp>
-          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
         </CSVDataSet>
         <hashTree/>
         <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - perf answer vars" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="script">vars.put('courseId', props.get('courseId', '2032055666142167042'))
-vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
-vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
-vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
-vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
-vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
+          <stringProp name="script">vars.put('courseId', (props['courseId'] ?: '2032055666142167042'))
+vars.put('teachingTaskId', (props['teachingTaskId'] ?: '2033505568785190913'))
+vars.put('blockId', (props['blockId'] ?: '3O00nCpPKp'))
+vars.put('authPrefix', (props['auth.prefix'] ?: 'Bearer '))
+vars.put('clientKeyHeader', (props['clientKey'] ?: 'test-client'))
+vars.put('clientVersionHeader', (props['clientVersion'] ?: 'V1.0'))</stringProp>
         </JSR223Sampler>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - perf answer common" enabled="true">
@@ -1415,26 +1486,22 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-Login" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-004-login-setup" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
           <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - perf answer" enabled="true">
             <stringProp name="scriptLanguage">groovy</stringProp>
-            <stringProp name="script">try {
-  def base = new BigInteger(vars.get('mac') ?: '1234567890123456789')
-  def delta = (ctx.getThreadNum() + 1L) * 100000L + (vars.getIteration() as long)
-  vars.put('runtimeMac', base.add(BigInteger.valueOf(delta)).toString())
-} catch (Exception e) {
-  vars.put('runtimeMac', vars.get('mac') ?: '1234567890123456789')
-}</stringProp>
+            <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
+long generatedMac = ThreadLocalRandom.current().nextLong(10000000000L, 100000000000L)
+vars.put('runtimeMac', String.valueOf(generatedMac))</stringProp>
           </JSR223PreProcessor>
           <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - accessToken" enabled="true">
@@ -1444,11 +1511,21 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
           </JSONPostProcessor>
           <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - perf login setup code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+              <stringProp name="2">accessToken</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
         </hashTree>
 
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-GetChapterTaskList" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-003-getCourseChapterTaskList" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1463,9 +1540,9 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
           <hashTree/>
         </hashTree>
 
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-QueryContent" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-003-queryExpGuidebookContent" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${dynamicUserReportId}</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${dynamicUserReportId}</stringProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
@@ -1480,59 +1557,93 @@ def contentText = root?.data?.content
 if (!contentText) return
 def inner = new JsonSlurper().parseText(contentText)
 def gap = inner?.blocks?.find { it.type == 'GapFilling' }
+def single = inner?.blocks?.find { it.type == 'SingleChoice' }
 if (gap) {
   vars.put('gapQuestionId', gap.id?.toString() ?: '')
   def inputIds = gap?.data?.items?.findAll { it.type == 'input' }?.collect { it.id?.toString() }?.findAll { it } ?: []
   vars.put('gapInputIdsCsv', inputIds.join(','))
+}
+if (single) {
+  vars.put('singleQuestionId', single.id?.toString() ?: '')
+  vars.put('singleChoiceReference', single?.data?.settings?.reference?.toString() ?: '')
 }</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
 
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-saveQuestionAnswer" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-004-saveQuestionAnswer" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
               <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">${saveQuestionAnswerBody}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build random subtitleanswer - perf focus" enabled="true">
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build questionAnswerList - perf focus" enabled="true">
             <stringProp name="scriptLanguage">groovy</stringProp>
             <stringProp name="script">import groovy.json.JsonOutput
 def username = vars.get('username') ?: 'unknown'
 def seed = username + '_' + ctx.getThreadNum() + '_' + vars.getIteration() + '_' + System.currentTimeMillis()
 def rnd = new Random((seed.hashCode() as long) ^ System.nanoTime())
-def min = Integer.parseInt(props.get('answer.min', '1'))
-def max = Integer.parseInt(props.get('answer.max', '99'))
+def min = Integer.parseInt((props['answer.min'] ?: '1'))
+def max = Integer.parseInt((props['answer.max'] ?: '9999'))
 def nextNumber = { -&gt; (rnd.nextInt(max - min + 1) + min).toString() }
-def n1 = nextNumber(); def n2 = nextNumber(); def n3 = nextNumber()
-while (n2 == n1) n2 = nextNumber()
-while (n3 == n1 || n3 == n2) n3 = nextNumber()
-def values = [n1, n2, n3]
-def ids = (vars.get('gapInputIdsCsv') ?: '').split(',').findAll { it?.trim() }
-def subtitle = [:]
-if (ids) {
-  ids.eachWithIndex { id, idx -&gt; subtitle[id] = values[idx % values.size()] }
-  vars.put('questionIdForAnswer', vars.get('gapQuestionId') ?: props.get('answer.fallback.questionId', 'YndHSdJkXa'))
-} else {
-  subtitle[props.get('answer.fallback.subtitle.key1', 'sub1')] = n1
-  subtitle[props.get('answer.fallback.subtitle.key2', 'sub2')] = n2
-  subtitle[props.get('answer.fallback.subtitle.key3', 'sub3')] = n3
-  vars.put('questionIdForAnswer', props.get('answer.fallback.questionId', 'YndHSdJkXa'))
+def gapSubtitleIds = [
+  (props['answer.fallback.gap.subtitle.id1'] ?: 'ribcrlV6xK'),
+  (props['answer.fallback.gap.subtitle.id2'] ?: 'Uv9NC4virf'),
+  (props['answer.fallback.gap.subtitle.id3'] ?: 'lHBYTCtXty')
+].collect { it?.toString()?.trim() }.findAll { it }
+if (!gapSubtitleIds) {
+  gapSubtitleIds = ['ribcrlV6xK', 'Uv9NC4virf', 'lHBYTCtXty']
 }
-vars.put('subtitleanswer', JsonOutput.toJson(subtitle))
+def targetCount = Math.max(gapSubtitleIds.size(), 3)
+def lastSignature = vars.get('lastAnswerSignaturePerf') ?: ''
+def signature = ''
+def gapSubtitleAnswerList = []
+int guard = 0
+while (true) {
+  guard++
+  def randomValues = []
+  def seen = [] as Set
+  while (randomValues.size() &lt; targetCount) {
+    def candidate = nextNumber()
+    if (seen.add(candidate) || seen.size() &gt;= (max - min + 1)) {
+      randomValues &lt;&lt; candidate
+    }
+  }
+  gapSubtitleAnswerList = []
+  gapSubtitleIds.eachWithIndex { sid, idx -&gt;
+    gapSubtitleAnswerList &lt;&lt; [subtitleId: sid, subtitleAnswer: randomValues[idx % randomValues.size()]]
+  }
+  signature = gapSubtitleAnswerList.collect { item -&gt; "${item.subtitleId}:${item.subtitleAnswer}" }.join('|')
+  if (signature != lastSignature || guard &gt;= 8) {
+    break
+  }
+}
+vars.put('lastAnswerSignaturePerf', signature)
+vars.put('answerSignature', signature)
+def singleBlockId = vars.get('singleQuestionId') ?: (props['answer.fallback.single.blockId'] ?: 'oaXh7gOyKt')
+def singleAnswer = vars.get('singleChoiceReference') ?: (props['answer.fallback.single.choice'] ?: 'uD2mKpkAmc')
+def singleSubtitleId = (props['answer.fallback.single.subtitleId'] ?: '')
+def gapBlockId = vars.get('gapQuestionId') ?: (props['answer.fallback.gap.blockId'] ?: 'YndHSdJkXa')
+def questionAnswerList = [
+  [
+    blockId: singleBlockId,
+    blockType: (props['answer.fallback.single.blockType'] ?: 'SingleChoice'),
+    subtitleAnswerList: [[subtitleId: singleSubtitleId, subtitleAnswer: singleAnswer]]
+  ],
+  [
+    blockId: gapBlockId,
+    blockType: (props['answer.fallback.gap.blockType'] ?: 'GapFilling'),
+    subtitleAnswerList: gapSubtitleAnswerList
+  ]
+]
 def payload = [
-  courseId: vars.get('courseId'),
-  teachingTaskId: vars.get('teachingTaskId'),
-  blockId: vars.get('blockId'),
   userReportId: vars.get('dynamicUserReportId'),
-  questionId: vars.get('questionIdForAnswer'),
-  answer: subtitle.values().join('|'),
-  subtitleanswer: subtitle
+  questionAnswerList: questionAnswerList
 ]
 vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))</stringProp>
           </JSR223PreProcessor>
@@ -1548,6 +1659,24 @@ vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))</stringProp>
           </JSR223Assertion>
           <hashTree/>
         </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-004-logout-cleanup" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/logout</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
       </hashTree>
 
       <!-- TG-06 Mixed Long Session -->
@@ -1557,7 +1686,7 @@ vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))</stringProp>
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">-1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','perf_mixed']) ? props.get('perf.mixed.threads','4') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy(def rp=props['run.profile']?:'all'; (rp=='all' || rp=='perf_mixed') ? (props['perf.mixed.threads']?:'4') : '0')}</stringProp>
         <stringProp name="ThreadGroup.ramp_time">${__P(perf.mixed.rampup,5)}</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(perf.mixed.duration.seconds,1800)}</stringProp>
@@ -1572,19 +1701,20 @@ vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))</stringProp>
           <stringProp name="variableNames">username,password,mac</stringProp>
           <stringProp name="delimiter">,</stringProp>
           <boolProp name="quotedData">false</boolProp>
+          <boolProp name="ignoreFirstLine">true</boolProp>
           <boolProp name="recycle">true</boolProp>
           <boolProp name="stopThread">false</boolProp>
-          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
         </CSVDataSet>
         <hashTree/>
         <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - mixed vars" enabled="true">
           <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="script">vars.put('courseId', props.get('courseId', '2032055666142167042'))
-vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
-vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
-vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
-vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
-vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
+          <stringProp name="script">vars.put('courseId', (props['courseId'] ?: '2032055666142167042'))
+vars.put('teachingTaskId', (props['teachingTaskId'] ?: '2033505568785190913'))
+vars.put('blockId', (props['blockId'] ?: '3O00nCpPKp'))
+vars.put('authPrefix', (props['auth.prefix'] ?: 'Bearer '))
+vars.put('clientKeyHeader', (props['clientKey'] ?: 'test-client'))
+vars.put('clientVersionHeader', (props['clientVersion'] ?: 'V1.0'))</stringProp>
         </JSR223Sampler>
         <hashTree/>
         <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - mixed common" enabled="true">
@@ -1595,17 +1725,24 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-Login" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-005-login" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
             <collectionProp name="Arguments.arguments">
-              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
             </collectionProp>
           </elementProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/login</stringProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
         </HTTPSamplerProxy>
         <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - random 11 digits" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">import java.util.concurrent.ThreadLocalRandom
+long generatedMac = ThreadLocalRandom.current().nextLong(10000000000L, 100000000000L)
+vars.put('runtimeMac', String.valueOf(generatedMac))</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
           <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - mixed accessToken" enabled="true">
             <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken</stringProp>
@@ -1613,38 +1750,48 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
             <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
           </JSONPostProcessor>
           <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - mixed login code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+              <stringProp name="2">accessToken</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
         </hashTree>
         <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Mixed online loop" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
           <stringProp name="LoopController.loops">-1</stringProp>
         </LoopController>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-Heartbeat" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-002-heartbeat" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/base/v1/heartbeat</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
             <hashTree/>
+            <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Timer - heartbeat interval" enabled="true">
+              <stringProp name="ConstantTimer.delay">${__groovy(((props['perf.mixed.heartbeat.seconds']?:'10') as int) * 1000)}</stringProp>
+            </ConstantTimer>
+            <hashTree/>
           </hashTree>
-          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Timer - heartbeat interval" enabled="true">
-            <stringProp name="ConstantTimer.delay">${__groovy((props.get('perf.mixed.heartbeat.seconds','10') as int) * 1000,)}</stringProp>
-          </ConstantTimer>
-          <hashTree/>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-QueryCourseList" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-003-queryCourseList" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/queryCourseList</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-GetChapterTaskList" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-003-getCourseChapterTaskList-mixed" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
             <stringProp name="HTTPSampler.method">GET</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
@@ -1658,35 +1805,68 @@ vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
             </JSONPostProcessor>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-saveQuestionAnswer" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-004-saveQuestionAnswer-mixed" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">${saveQuestionAnswerBody}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
               </collectionProp>
             </elementProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
           </HTTPSamplerProxy>
           <hashTree>
-            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build mixed random subtitleanswer" enabled="true">
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build mixed questionAnswerList (fixed subtitleId)" enabled="true">
               <stringProp name="scriptLanguage">groovy</stringProp>
               <stringProp name="script">import groovy.json.JsonOutput
 def username = vars.get('username') ?: 'unknown'
 def seed = username + '_' + ctx.getThreadNum() + '_' + vars.getIteration() + '_' + System.currentTimeMillis()
 def rnd = new Random((seed.hashCode() as long) ^ System.nanoTime())
-def a = (rnd.nextInt(89) + 10).toString()
-def b = (rnd.nextInt(89) + 10).toString()
-def c = (rnd.nextInt(89) + 10).toString()
-def subtitle = [sub1:a, sub2:b, sub3:c]
+def min = Integer.parseInt((props['answer.min'] ?: '1'))
+def max = Integer.parseInt((props['answer.max'] ?: '9999'))
+def nextNumber = { -&gt; (rnd.nextInt(max - min + 1) + min).toString() }
+def lastSignature = vars.get('lastAnswerSignatureMixed') ?: ''
+def a = ''
+def b = ''
+def c = ''
+def signature = ''
+int guard = 0
+while (true) {
+  guard++
+  a = nextNumber()
+  b = nextNumber()
+  while (b == a) b = nextNumber()
+  c = nextNumber()
+  while (c == a || c == b) c = nextNumber()
+  signature = "${a}|${b}|${c}"
+  if (signature != lastSignature || guard &gt;= 8) {
+    break
+  }
+}
+vars.put('lastAnswerSignatureMixed', signature)
+vars.put('answerSignature', signature)
+def questionAnswerList = [
+  [
+    blockId: (vars.get('singleQuestionId') ?: (props['answer.fallback.single.blockId'] ?: 'oaXh7gOyKt')),
+    blockType: (props['answer.fallback.single.blockType'] ?: 'SingleChoice'),
+    subtitleAnswerList: [[
+      subtitleId: (props['answer.fallback.single.subtitleId'] ?: ''),
+      subtitleAnswer: (vars.get('singleChoiceReference') ?: (props['answer.fallback.single.choice'] ?: 'uD2mKpkAmc'))
+    ]]
+  ],
+  [
+    blockId: (vars.get('gapQuestionId') ?: (props['answer.fallback.gap.blockId'] ?: 'YndHSdJkXa')),
+    blockType: (props['answer.fallback.gap.blockType'] ?: 'GapFilling'),
+    subtitleAnswerList: [
+      [subtitleId: (props['answer.fallback.gap.subtitle.id1'] ?: 'ribcrlV6xK'), subtitleAnswer: a],
+      [subtitleId: (props['answer.fallback.gap.subtitle.id2'] ?: 'Uv9NC4virf'), subtitleAnswer: b],
+      [subtitleId: (props['answer.fallback.gap.subtitle.id3'] ?: 'lHBYTCtXty'), subtitleAnswer: c]
+    ]
+  ]
+]
 def payload = [
-  courseId: vars.get('courseId'),
-  teachingTaskId: vars.get('teachingTaskId'),
-  blockId: vars.get('blockId'),
   userReportId: vars.get('dynamicUserReportId'),
-  questionId: props.get('answer.fallback.questionId', 'YndHSdJkXa'),
-  answer: subtitle.values().join('|'),
-  subtitleanswer: subtitle
+  questionAnswerList: questionAnswerList
 ]
 vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))
 def record = [
@@ -1694,7 +1874,7 @@ def record = [
   teachingTaskId: vars.get('teachingTaskId'),
   blockId: vars.get('blockId'),
   userReportId: vars.get('dynamicUserReportId'),
-  answerRecord: JsonOutput.toJson([subtitleanswer: subtitle, seed: seed])
+  answerRecord: JsonOutput.toJson([questionAnswerList: questionAnswerList, seed: seed])
 ]
 vars.put('saveExpAnswerRecordBody', JsonOutput.toJson(record))</stringProp>
             </JSR223PreProcessor>
@@ -1702,14 +1882,14 @@ vars.put('saveExpAnswerRecordBody', JsonOutput.toJson(record))</stringProp>
             <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
             <hashTree/>
           </hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-saveExpAnswerRecord" enabled="true">
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-004-saveExpAnswerRecord-mixed" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
               <collectionProp name="Arguments.arguments">
                 <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">${saveExpAnswerRecordBody}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
               </collectionProp>
             </elementProp>
             <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <stringProp name="HTTPSampler.path">/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
+            <stringProp name="HTTPSampler.path">/api/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
             <stringProp name="HTTPSampler.method">POST</stringProp>
           </HTTPSamplerProxy>
           <hashTree>

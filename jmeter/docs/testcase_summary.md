@@ -7,7 +7,7 @@
 3. 查询课程章节任务并提取当前账号 `userReportId`
 4. 查询指导书目录
 5. 查询指导书内容（使用账号匹配的 `userReportId`）
-6. 学生答题（`subtitleanswer` 合法随机）
+6. 学生答题（`questionAnswerList.subtitleAnswerList` 合法随机）
 7. 保存答题过程
 8. 退出教学任务
 9. 退出课程
@@ -56,7 +56,8 @@
 
 ### 4.2 学生答题重点
 - 持续压测 `saveQuestionAnswer`（填空题）
-- 每次随机生成合法数值 `subtitleanswer`，确保每人每次不同
+- 每次随机生成合法数值 `subtitleAnswerList.subtitleAnswer`（`1-9999`），并避免与上一次提交重复
+- 当前报告口径固定使用 3 个 `subtitleId`：`ribcrlV6xK`、`Uv9NC4virf`、`lHBYTCtXty`
 
 ### 4.3 4账号持续在线
 - 登录 + 每 10 秒 heartbeat + 查询 + 答题 + 保存过程循环
