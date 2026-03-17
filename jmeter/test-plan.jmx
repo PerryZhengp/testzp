@@ -1,0 +1,1723 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.6.3">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="校园版接口自动化与性能测试计划" enabled="true">
+      <stringProp name="TestPlan.comments">Campus API automation + performance plan. Includes functional, keepalive, exception, and performance focus groups.</stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="courseId" elementType="Argument">
+            <stringProp name="Argument.name">courseId</stringProp>
+            <stringProp name="Argument.value">${__P(courseId,2032055666142167042)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="teachingTaskId" elementType="Argument">
+            <stringProp name="Argument.name">teachingTaskId</stringProp>
+            <stringProp name="Argument.value">${__P(teachingTaskId,2033505568785190913)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="blockId" elementType="Argument">
+            <stringProp name="Argument.name">blockId</stringProp>
+            <stringProp name="Argument.value">${__P(blockId,3O00nCpPKp)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">${__P(base.host,192.168.0.90)}</stringProp>
+        <stringProp name="HTTPSampler.port">${__P(base.port,9999)}</stringProp>
+        <stringProp name="HTTPSampler.protocol">${__P(base.protocol,http)}</stringProp>
+        <stringProp name="HTTPSampler.path">${__P(base.path,)}</stringProp>
+        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">6</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <CookieManager guiclass="CookiePanel" testclass="CookieManager" testname="HTTP Cookie Manager" enabled="true">
+        <collectionProp name="CookieManager.cookies"/>
+        <boolProp name="CookieManager.clearEachIteration">false</boolProp>
+        <boolProp name="CookieManager.controlledByThreadGroup">false</boolProp>
+      </CookieManager>
+      <hashTree/>
+      <CacheManager guiclass="CacheManagerGui" testclass="CacheManager" testname="HTTP Cache Manager" enabled="true">
+        <boolProp name="clearEachIteration">false</boolProp>
+        <boolProp name="useExpires">true</boolProp>
+      </CacheManager>
+      <hashTree/>
+
+      <!-- TG-01 Functional -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG-01 Functional-MainFlow" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Functional Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(functional.loops,1)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','functional']) ? props.get('functional.threads','4') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(functional.rampup,2)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <longProp name="ThreadGroup.start_time">1710000000000</longProp>
+        <longProp name="ThreadGroup.end_time">1710000000000</longProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV - accounts.csv" enabled="true">
+          <stringProp name="filename">${__P(accounts.file,jmeter/data/accounts.csv)}</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">username,password,mac</stringProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - Load Mapping &amp; Runtime Vars" enabled="true">
+          <stringProp name="cacheKey">functional-init</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="parameters"></stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+
+def map = props.getObject('accountReportMap')
+if (map == null) {
+  map = [:]
+  def mappingPath = props.get('mapping.file', 'jmeter/data/account_report_mapping.csv')
+  def fullPath = Paths.get(mappingPath)
+  if (!fullPath.isAbsolute()) {
+    fullPath = Paths.get(System.getProperty('user.dir')).resolve(mappingPath)
+  }
+  if (Files.exists(fullPath)) {
+    Files.readAllLines(fullPath, StandardCharsets.UTF_8).drop(1).each { line ->
+      if (!line?.trim()) return
+      def arr = line.split(',', 2)
+      def u = arr[0].trim()
+      def r = arr.length &gt; 1 ? arr[1].trim() : ''
+      map[u] = r
+    }
+  }
+  props.putObject('accountReportMap', map)
+}
+
+vars.put('courseId', props.get('courseId', '2032055666142167042'))
+vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
+vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
+vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
+vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
+vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))
+
+def username = vars.get('username') ?: ''
+def mapped = map[username] ?: ''
+vars.put('mappedUserReportId', mapped)
+vars.put('dynamicUserReportId', '')
+vars.put('effectiveUserReportId', mapped)
+def cross = map.find { k, v -> k != username &amp;&amp; v }
+vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - Common Client Headers" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Content-Type" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="clientKey" elementType="Header">
+              <stringProp name="Header.name">clientKey</stringProp>
+              <stringProp name="Header.value">${clientKeyHeader}</stringProp>
+            </elementProp>
+            <elementProp name="clientVersion" elementType="Header">
+              <stringProp name="Header.name">clientVersion</stringProp>
+              <stringProp name="Header.value">${clientVersionHeader}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-Login" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - accessToken/refreshToken" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">accessToken;refreshToken</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken;$.data.refreshToken</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1;1</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">; </stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - Login contains code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert - Login token not empty" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">if (!prev.getResponseCode().startsWith('2')) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Login HTTP status is not 2xx: ' + prev.getResponseCode())
+}
+def body = prev.getResponseDataAsString()
+if (body.contains('NullPointerException') || body.contains('Cannot invoke')) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Server exception signature found in login response')
+}
+if (!(vars.get('accessToken') ?: '').trim()) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('accessToken is empty after login')
+}</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-QueryCourseList" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - QueryCourseList code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-GetCourseChapterTaskList" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - dynamicUserReportId" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">dynamicUserReportId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].chapterTaskInfoList[0].userReportId</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Resolve - effectiveUserReportId" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def dynamicId = (vars.get('dynamicUserReportId') ?: '').trim()
+def mappedId = (vars.get('mappedUserReportId') ?: '').trim()
+def effective = dynamicId ? dynamicId : mappedId
+vars.put('effectiveUserReportId', effective)
+vars.put('preconditionMissing', effective ? 'false' : 'true')</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - ChapterTask code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+              <stringProp name="2">userReportId</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="IF - userReportId available" enabled="true">
+          <stringProp name="IfController.condition">${__groovy((vars.get('effectiveUserReportId') ?: '').trim().length() &gt; 0,)}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-QueryExpGuidebookCatalog" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookCatalog?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="Authorization" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - Catalog code=0" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1">"code":0</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-QueryExpGuidebookContent" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments"/>
+            </elementProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${effectiveUserReportId}</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="Authorization" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Parse - dynamic question ids" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="script">import groovy.json.JsonSlurper
+def txt = prev.getResponseDataAsString()
+def root = new JsonSlurper().parseText(txt)
+def contentText = root?.data?.content
+if (!contentText) return
+def inner = new JsonSlurper().parseText(contentText)
+def gap = inner?.blocks?.find { it.type == 'GapFilling' }
+def single = inner?.blocks?.find { it.type == 'SingleChoice' }
+if (gap) {
+  vars.put('gapQuestionId', gap.id?.toString() ?: '')
+  def inputIds = gap?.data?.items?.findAll { it.type == 'input' }?.collect { it.id?.toString() }?.findAll { it } ?: []
+  vars.put('gapInputIdsCsv', inputIds.join(','))
+}
+if (single) {
+  vars.put('singleQuestionId', single.id?.toString() ?: '')
+  vars.put('singleChoiceReference', single?.data?.settings?.reference?.toString() ?: '')
+}</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - Content code=0" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1">"code":0</stringProp>
+                <stringProp name="2">"content"</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-saveQuestionAnswer" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${saveQuestionAnswerBody}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build payload - Random unique subtitleanswer (dynamic+fallback)" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="script">import groovy.json.JsonOutput
+def username = vars.get('username') ?: 'unknown'
+def seed = username + '_' + ctx.getThreadNum() + '_' + vars.getIteration() + '_' + System.currentTimeMillis()
+def rnd = new Random((seed.hashCode() as long) ^ System.nanoTime())
+def min = Integer.parseInt(props.get('answer.min', '1'))
+def max = Integer.parseInt(props.get('answer.max', '99'))
+def nextNumber = { -&gt; (rnd.nextInt(max - min + 1) + min).toString() }
+def n1 = nextNumber()
+def n2 = nextNumber()
+def n3 = nextNumber()
+while (n2 == n1) { n2 = nextNumber() }
+while (n3 == n1 || n3 == n2) { n3 = nextNumber() }
+def values = [n1, n2, n3]
+def subtitleMap = [:]
+def mode = (props.get('answer.payload.mode', 'hybrid') ?: 'hybrid').toLowerCase()
+def ids = (vars.get('gapInputIdsCsv') ?: '').split(',').findAll { it?.trim() }
+def useDynamic = (mode == 'dynamic' || mode == 'hybrid') &amp;&amp; ids
+if (useDynamic) {
+  ids.eachWithIndex { id, idx -&gt; subtitleMap[id] = values[idx % values.size()] }
+  vars.put('questionIdForAnswer', vars.get('gapQuestionId') ?: props.get('answer.fallback.questionId', 'YndHSdJkXa'))
+} else {
+  subtitleMap[props.get('answer.fallback.subtitle.key1', 'sub1')] = n1
+  subtitleMap[props.get('answer.fallback.subtitle.key2', 'sub2')] = n2
+  subtitleMap[props.get('answer.fallback.subtitle.key3', 'sub3')] = n3
+  vars.put('questionIdForAnswer', props.get('answer.fallback.questionId', 'YndHSdJkXa'))
+}
+def subtitleJson = JsonOutput.toJson(subtitleMap)
+vars.put('subtitleanswer', subtitleJson)
+vars.put('subtitleanswerSeed', seed)
+def answerValue = subtitleMap.values().join('|')
+vars.put('answer', answerValue)
+def payload = [
+  courseId: vars.get('courseId'),
+  teachingTaskId: vars.get('teachingTaskId'),
+  blockId: vars.get('blockId'),
+  userReportId: vars.get('effectiveUserReportId'),
+  questionId: vars.get('questionIdForAnswer'),
+  answer: answerValue,
+  subtitleanswer: subtitleMap
+]
+vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))
+def recordPayload = [
+  courseId: vars.get('courseId'),
+  teachingTaskId: vars.get('teachingTaskId'),
+  blockId: vars.get('blockId'),
+  userReportId: vars.get('effectiveUserReportId'),
+  answerRecord: JsonOutput.toJson([
+    subtitleanswer: subtitleMap,
+    seed: seed,
+    user: username,
+    ts: System.currentTimeMillis()
+  ])
+]
+vars.put('saveExpAnswerRecordBody', JsonOutput.toJson(recordPayload))</stringProp>
+            </JSR223PreProcessor>
+            <hashTree/>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="Authorization" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - saveQuestionAnswer code=0" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1">"code":0</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-SaveExpAnswerRecord" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">${saveExpAnswerRecordBody}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <stringProp name="HTTPSampler.path">/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="Authorization" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - SaveExpAnswerRecord success strict" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1">"code":0</stringProp>
+                <stringProp name="2">"data":true</stringProp>
+                <stringProp name="3">"ok":true</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+
+        <IfController guiclass="IfControllerPanel" testclass="IfController" testname="IF - userReportId missing" enabled="true">
+          <stringProp name="IfController.condition">${__groovy((vars.get('effectiveUserReportId') ?: '').trim().length() == 0,)}</stringProp>
+          <boolProp name="IfController.evaluateAll">false</boolProp>
+          <boolProp name="IfController.useExpression">true</boolProp>
+        </IfController>
+        <hashTree>
+          <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="MARK - PRECONDITION_MISSING userReportId" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">SampleResult.setSuccessful(true)
+SampleResult.setResponseCodeOK()
+SampleResult.setResponseMessage('PRECONDITION_MISSING: userReportId is empty, dependent positive APIs skipped')
+SampleResult.setResponseData('PRECONDITION_MISSING', 'UTF-8')</stringProp>
+          </JSR223Sampler>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-QuitTeachingTask" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/quitTeachingTask?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - QuitTeachingTask code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-QuitCourse" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/quitCourse?courseId=${courseId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - QuitCourse code=0" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="FUNC-Logout" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/logout</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - Logout success strict" enabled="true">
+            <collectionProp name="Asserion.test_strings">
+              <stringProp name="1">"code":0</stringProp>
+              <stringProp name="2">"data":true</stringProp>
+              <stringProp name="3">"ok":true</stringProp>
+            </collectionProp>
+            <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+            <boolProp name="Assertion.assume_success">false</boolProp>
+            <intProp name="Assertion.test_type">2</intProp>
+          </ResponseAssertion>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert - no server exception signature" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">def body = prev.getResponseDataAsString()
+if (prev.getResponseCode() == '500' || body.contains('NullPointerException') || body.contains('Cannot invoke')) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Logout response contains server exception signature')
+}</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+
+      <!-- TG-02 Keepalive -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG-02 Session-KeepAlive" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Keepalive Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','functional']) ? props.get('keepalive.threads','1') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(keepalive.rampup,1)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <longProp name="ThreadGroup.start_time">1710000000000</longProp>
+        <longProp name="ThreadGroup.end_time">1710000000000</longProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV - accounts.csv" enabled="true">
+          <stringProp name="filename">${__P(accounts.file,jmeter/data/accounts.csv)}</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">username,password,mac</stringProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - keepalive vars" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">vars.put('courseId', props.get('courseId', '2032055666142167042'))
+vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
+vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
+vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
+vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - Common Client Headers" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Content-Type" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+            <elementProp name="clientKey" elementType="Header">
+              <stringProp name="Header.name">clientKey</stringProp>
+              <stringProp name="Header.value">${clientKeyHeader}</stringProp>
+            </elementProp>
+            <elementProp name="clientVersion" elementType="Header">
+              <stringProp name="Header.name">clientVersion</stringProp>
+              <stringProp name="Header.value">${clientVersionHeader}</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="KA-Login" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - accessToken" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop - heartbeat every 10s" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(keepalive.heartbeats,6)}</stringProp>
+        </LoopController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="KA-Heartbeat" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+              <collectionProp name="HeaderManager.headers">
+                <elementProp name="Authorization" elementType="Header">
+                  <stringProp name="Header.name">Authorization</stringProp>
+                  <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+                </elementProp>
+              </collectionProp>
+            </HeaderManager>
+            <hashTree/>
+            <ResponseAssertion guiclass="AssertionGui" testclass="ResponseAssertion" testname="Assert - Heartbeat code=0" enabled="true">
+              <collectionProp name="Asserion.test_strings">
+                <stringProp name="1">"code":0</stringProp>
+              </collectionProp>
+              <stringProp name="Assertion.test_field">Assertion.response_data</stringProp>
+              <boolProp name="Assertion.assume_success">false</boolProp>
+              <intProp name="Assertion.test_type">2</intProp>
+            </ResponseAssertion>
+            <hashTree/>
+          </hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Timer - 10s interval" enabled="true">
+            <stringProp name="ConstantTimer.delay">${__groovy((props.get('keepalive.interval.seconds','10') as int) * 1000,)}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="KA-QueryCourseList-Alive [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <TestAction guiclass="TestActionGui" testclass="TestAction" testname="Pause - wait token expire window" enabled="true">
+          <intProp name="ActionProcessor.action">1</intProp>
+          <intProp name="ActionProcessor.target">0</intProp>
+          <stringProp name="ActionProcessor.duration">${__groovy((props.get('keepalive.expire.wait.seconds','35') as int) * 1000,)}</stringProp>
+        </TestAction>
+        <hashTree/>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="KA-QueryCourseList-AfterExpire [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="KA-Heartbeat-AfterExpire [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="KA-QueryCourseList-AfterExpiredHeartbeat [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assertion - keepalive expected result" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper
+def label = prev.getSampleLabel()
+def body = prev.getResponseDataAsString()
+if (prev.getResponseCode() == '500' || body.contains('NullPointerException') || body.contains('Cannot invoke')) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Server exception during keepalive flow: ' + label)
+  return
+}
+def code = null
+try { code = new JsonSlurper().parseText(body)?.code } catch (Exception ignore) {}
+if (label.contains('[EXPECT_OK]') &amp;&amp; code != 0) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Expected success but failed: ' + label + ' code=' + code)
+}
+if (label.contains('[EXPECT_FAIL]') &amp;&amp; code == 0) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Expected failure but got success: ' + label)
+}</stringProp>
+        </JSR223Assertion>
+        <hashTree/>
+      </hashTree>
+
+      <!-- TG-03 Exception -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG-03 Exception-And-Boundary" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Exception Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">${__P(exception.loops,1)}</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','functional']) ? props.get('exception.threads','1') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(exception.rampup,1)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <longProp name="ThreadGroup.start_time">1710000000000</longProp>
+        <longProp name="ThreadGroup.end_time">1710000000000</longProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV - accounts.csv" enabled="true">
+          <stringProp name="filename">${__P(accounts.file,jmeter/data/accounts.csv)}</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">username,password,mac</stringProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - exception vars + cross report id" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.StandardCharsets
+def map = props.getObject('accountReportMap')
+if (map == null) {
+  map = [:]
+  def mappingPath = props.get('mapping.file', 'jmeter/data/account_report_mapping.csv')
+  def fullPath = Paths.get(mappingPath)
+  if (!fullPath.isAbsolute()) fullPath = Paths.get(System.getProperty('user.dir')).resolve(mappingPath)
+  if (Files.exists(fullPath)) {
+    Files.readAllLines(fullPath, StandardCharsets.UTF_8).drop(1).each { line -&gt;
+      if (!line?.trim()) return
+      def arr = line.split(',', 2)
+      map[arr[0].trim()] = arr.length &gt; 1 ? arr[1].trim() : ''
+    }
+  }
+  props.putObject('accountReportMap', map)
+}
+vars.put('courseId', props.get('courseId', '2032055666142167042'))
+vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
+vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
+vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
+vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
+vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))
+def username = vars.get('username') ?: ''
+def mapped = map[username] ?: ''
+vars.put('mappedUserReportId', mapped)
+def cross = map.find { k, v -> k != username &amp;&amp; v }
+vars.put('crossUserReportId', cross ? cross.value.toString() : '')</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - Content-Type only" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Content-Type" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-Login baseline [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - clientKey/clientVersion" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="clientKey" elementType="Header">
+                <stringProp name="Header.name">clientKey</stringProp>
+                <stringProp name="Header.value">${clientKeyHeader}</stringProp>
+              </elementProp>
+              <elementProp name="clientVersion" elementType="Header">
+                <stringProp name="Header.name">clientVersion</stringProp>
+                <stringProp name="Header.value">${clientVersionHeader}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - exception accessToken" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-NoAuth-QueryCourseList [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree/>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-EmptyToken-QueryCourseList [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - empty Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Bearer </stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-FakeToken-QueryCourseList [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - fake Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">Bearer fake-token-for-exception</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-Logout token [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/logout</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth+client headers" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+              <elementProp name="clientKey" elementType="Header">
+                <stringProp name="Header.name">clientKey</stringProp>
+                <stringProp name="Header.value">${clientKeyHeader}</stringProp>
+              </elementProp>
+              <elementProp name="clientVersion" elementType="Header">
+                <stringProp name="Header.name">clientVersion</stringProp>
+                <stringProp name="Header.value">${clientVersionHeader}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-ReuseToken-AfterLogout [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - old token" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header">
+                <stringProp name="Header.name">Authorization</stringProp>
+                <stringProp name="Header.value">${authPrefix}${accessToken}</stringProp>
+              </elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-courseId-empty [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth for boundary" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-courseId-illegal [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=INVALID-COURSE&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth for boundary" enabled="true">
+            <collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-teachingTaskId-empty [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth for boundary" enabled="true">
+            <collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-teachingTaskId-illegal [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=INVALID-TASK</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth for boundary" enabled="true">
+            <collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-userReportId-empty [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-blockId-empty [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=&amp;userReportId=${mappedUserReportId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-HeaderMissing-Logout [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">{}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/logout</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - only Authorization" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientKey-compatible [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - clientKey + clientVersion" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp>
+              <elementProp name="clientKey" elementType="Header"><stringProp name="Header.name">clientKey</stringProp><stringProp name="Header.value">${clientKeyHeader}</stringProp></elementProp>
+              <elementProp name="clientVersion" elementType="Header"><stringProp name="Header.name">clientVersion</stringProp><stringProp name="Header.value">${clientVersionHeader}</stringProp></elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientkey-compatible [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - clientkey + clientversion lowercase" enabled="true">
+            <collectionProp name="HeaderManager.headers">
+              <elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp>
+              <elementProp name="clientkey" elementType="Header"><stringProp name="Header.name">clientkey</stringProp><stringProp name="Header.value">${clientKeyHeader}</stringProp></elementProp>
+              <elementProp name="clientversion" elementType="Header"><stringProp name="Header.name">clientversion</stringProp><stringProp name="Header.value">${__P(clientVersionAlt,v1.0)}</stringProp></elementProp>
+            </collectionProp>
+          </HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientVersion-V1.0 [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - version V1.0" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp><elementProp name="clientKey" elementType="Header"><stringProp name="Header.name">clientKey</stringProp><stringProp name="Header.value">${clientKeyHeader}</stringProp></elementProp><elementProp name="clientVersion" elementType="Header"><stringProp name="Header.name">clientVersion</stringProp><stringProp name="Header.value">V1.0</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientVersion-v1.0 [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - version v1.0" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp><elementProp name="clientKey" elementType="Header"><stringProp name="Header.name">clientKey</stringProp><stringProp name="Header.value">${clientKeyHeader}</stringProp></elementProp><elementProp name="clientVersion" elementType="Header"><stringProp name="Header.name">clientVersion</stringProp><stringProp name="Header.value">v1.0</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-clientVersion-1.0.0 [EXPECT_OK]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - version 1.0.0" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp><elementProp name="clientKey" elementType="Header"><stringProp name="Header.name">clientKey</stringProp><stringProp name="Header.value">${clientKeyHeader}</stringProp></elementProp><elementProp name="clientVersion" elementType="Header"><stringProp name="Header.name">clientVersion</stringProp><stringProp name="Header.value">1.0.0</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-CrossAccount-QueryContent [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${crossUserReportId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth cross" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-CrossAccount-saveQuestionAnswer [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${crossSaveQuestionAnswerBody}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build - cross account answer body" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">import groovy.json.JsonOutput
+def rnd = new Random(System.nanoTime())
+def a1 = (rnd.nextInt(89) + 10).toString()
+def a2 = (rnd.nextInt(89) + 10).toString()
+def a3 = (rnd.nextInt(89) + 10).toString()
+def subtitle = [sub1:a1, sub2:a2, sub3:a3]
+def payload = [
+  courseId: vars.get('courseId'),
+  teachingTaskId: vars.get('teachingTaskId'),
+  blockId: vars.get('blockId'),
+  userReportId: vars.get('crossUserReportId'),
+  questionId: props.get('answer.fallback.questionId', 'YndHSdJkXa'),
+  answer: subtitle.values().join('|'),
+  subtitleanswer: subtitle
+]
+vars.put('crossSaveQuestionAnswerBody', JsonOutput.toJson(payload))
+def recordPayload = [
+  courseId: vars.get('courseId'),
+  teachingTaskId: vars.get('teachingTaskId'),
+  blockId: vars.get('blockId'),
+  userReportId: vars.get('crossUserReportId'),
+  answerRecord: JsonOutput.toJson([subtitleanswer: subtitle, ts: System.currentTimeMillis()])
+]
+vars.put('crossSaveExpAnswerRecordBody', JsonOutput.toJson(recordPayload))</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth cross" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="EX-CrossAccount-saveExpAnswerRecord [EXPECT_FAIL]" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument">
+                <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                <stringProp name="Argument.value">${crossSaveExpAnswerRecordBody}</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth cross" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+        </hashTree>
+
+        <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assertion - exception expected pass/fail contract" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">import groovy.json.JsonSlurper
+def label = prev.getSampleLabel()
+def body = prev.getResponseDataAsString()
+if (prev.getResponseCode() == '500' || body.contains('NullPointerException') || body.contains('Cannot invoke') || body.contains('java.lang')) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Server exception signature detected in exception scenario: ' + label)
+  return
+}
+def code = null
+try { code = new JsonSlurper().parseText(body)?.code } catch (Exception ignore) {}
+if (label.contains('[EXPECT_FAIL]') &amp;&amp; code == 0) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Expected business failure but got success: ' + label)
+}
+if (label.contains('[EXPECT_OK]') &amp;&amp; code != 0) {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('Expected success but got business failure: ' + label + ' code=' + code)
+}</stringProp>
+        </JSR223Assertion>
+        <hashTree/>
+      </hashTree>
+
+      <!-- TG-04 Performance Login Focus -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG-04 Perf-Login-Focus" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Perf Login Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">-1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','perf_login']) ? props.get('perf.login.threads','8') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(perf.login.rampup,10)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(perf.login.duration.seconds,300)}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+        <longProp name="ThreadGroup.start_time">1710000000000</longProp>
+        <longProp name="ThreadGroup.end_time">1710000000000</longProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV - accounts.csv" enabled="true">
+          <stringProp name="filename">${__P(accounts.file,jmeter/data/accounts.csv)}</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">username,password,mac</stringProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - login perf" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Content-Type" elementType="Header"><stringProp name="Header.name">Content-Type</stringProp><stringProp name="Header.value">application/json</stringProp></elementProp>
+            <elementProp name="clientKey" elementType="Header"><stringProp name="Header.name">clientKey</stringProp><stringProp name="Header.value">${__P(clientKey,test-client)}</stringProp></elementProp>
+            <elementProp name="clientVersion" elementType="Header"><stringProp name="Header.name">clientVersion</stringProp><stringProp name="Header.value">${__P(clientVersion,V1.0)}</stringProp></elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Login" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - avoid occupied device" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">try {
+  def base = new BigInteger(vars.get('mac') ?: '1234567890123456789')
+  def delta = (ctx.getThreadNum() + 1L) * 100000L + (vars.getIteration() as long)
+  vars.put('runtimeMac', base.add(BigInteger.valueOf(delta)).toString())
+} catch (Exception e) {
+  vars.put('runtimeMac', vars.get('mac') ?: '1234567890123456789')
+}</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert - login perf non 500" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">if (prev.getResponseCode() == '500') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('HTTP 500 in login perf')
+}</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+
+      <!-- TG-05 Performance saveQuestionAnswer Focus -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG-05 Perf-saveQuestionAnswer-Focus" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Perf Answer Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">-1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','perf_answer']) ? props.get('perf.answer.threads','8') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(perf.answer.rampup,10)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(perf.answer.duration.seconds,600)}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+        <longProp name="ThreadGroup.start_time">1710000000000</longProp>
+        <longProp name="ThreadGroup.end_time">1710000000000</longProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV - accounts.csv" enabled="true">
+          <stringProp name="filename">${__P(accounts.file,jmeter/data/accounts.csv)}</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">username,password,mac</stringProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - perf answer vars" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">vars.put('courseId', props.get('courseId', '2032055666142167042'))
+vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
+vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
+vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
+vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
+vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - perf answer common" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Content-Type" elementType="Header"><stringProp name="Header.name">Content-Type</stringProp><stringProp name="Header.value">application/json</stringProp></elementProp>
+            <elementProp name="clientKey" elementType="Header"><stringProp name="Header.name">clientKey</stringProp><stringProp name="Header.value">${clientKeyHeader}</stringProp></elementProp>
+            <elementProp name="clientVersion" elementType="Header"><stringProp name="Header.name">clientVersion</stringProp><stringProp name="Header.value">${clientVersionHeader}</stringProp></elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-Login" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${runtimeMac}&quot;}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build runtime mac - perf answer" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">try {
+  def base = new BigInteger(vars.get('mac') ?: '1234567890123456789')
+  def delta = (ctx.getThreadNum() + 1L) * 100000L + (vars.getIteration() as long)
+  vars.put('runtimeMac', base.add(BigInteger.valueOf(delta)).toString())
+} catch (Exception e) {
+  vars.put('runtimeMac', vars.get('mac') ?: '1234567890123456789')
+}</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - accessToken" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-GetChapterTaskList" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - dynamicUserReportId" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">dynamicUserReportId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].chapterTaskInfoList[0].userReportId</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-QueryContent" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}&amp;blockId=${blockId}&amp;userReportId=${dynamicUserReportId}</stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="Parse question ids - perf answer" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">import groovy.json.JsonSlurper
+def txt = prev.getResponseDataAsString()
+def root = new JsonSlurper().parseText(txt)
+def contentText = root?.data?.content
+if (!contentText) return
+def inner = new JsonSlurper().parseText(contentText)
+def gap = inner?.blocks?.find { it.type == 'GapFilling' }
+if (gap) {
+  vars.put('gapQuestionId', gap.id?.toString() ?: '')
+  def inputIds = gap?.data?.items?.findAll { it.type == 'input' }?.collect { it.id?.toString() }?.findAll { it } ?: []
+  vars.put('gapInputIdsCsv', inputIds.join(','))
+}</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="PERF-Answer-saveQuestionAnswer" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">${saveQuestionAnswerBody}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build random subtitleanswer - perf focus" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">import groovy.json.JsonOutput
+def username = vars.get('username') ?: 'unknown'
+def seed = username + '_' + ctx.getThreadNum() + '_' + vars.getIteration() + '_' + System.currentTimeMillis()
+def rnd = new Random((seed.hashCode() as long) ^ System.nanoTime())
+def min = Integer.parseInt(props.get('answer.min', '1'))
+def max = Integer.parseInt(props.get('answer.max', '99'))
+def nextNumber = { -&gt; (rnd.nextInt(max - min + 1) + min).toString() }
+def n1 = nextNumber(); def n2 = nextNumber(); def n3 = nextNumber()
+while (n2 == n1) n2 = nextNumber()
+while (n3 == n1 || n3 == n2) n3 = nextNumber()
+def values = [n1, n2, n3]
+def ids = (vars.get('gapInputIdsCsv') ?: '').split(',').findAll { it?.trim() }
+def subtitle = [:]
+if (ids) {
+  ids.eachWithIndex { id, idx -&gt; subtitle[id] = values[idx % values.size()] }
+  vars.put('questionIdForAnswer', vars.get('gapQuestionId') ?: props.get('answer.fallback.questionId', 'YndHSdJkXa'))
+} else {
+  subtitle[props.get('answer.fallback.subtitle.key1', 'sub1')] = n1
+  subtitle[props.get('answer.fallback.subtitle.key2', 'sub2')] = n2
+  subtitle[props.get('answer.fallback.subtitle.key3', 'sub3')] = n3
+  vars.put('questionIdForAnswer', props.get('answer.fallback.questionId', 'YndHSdJkXa'))
+}
+vars.put('subtitleanswer', JsonOutput.toJson(subtitle))
+def payload = [
+  courseId: vars.get('courseId'),
+  teachingTaskId: vars.get('teachingTaskId'),
+  blockId: vars.get('blockId'),
+  userReportId: vars.get('dynamicUserReportId'),
+  questionId: vars.get('questionIdForAnswer'),
+  answer: subtitle.values().join('|'),
+  subtitleanswer: subtitle
+]
+vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))</stringProp>
+          </JSR223PreProcessor>
+          <hashTree/>
+          <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+          <hashTree/>
+          <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="Assert - perf answer no 500" enabled="true">
+            <stringProp name="scriptLanguage">groovy</stringProp>
+            <stringProp name="script">if (prev.getResponseCode() == '500') {
+  AssertionResult.setFailure(true)
+  AssertionResult.setFailureMessage('HTTP 500 in perf answer sampler')
+}</stringProp>
+          </JSR223Assertion>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+
+      <!-- TG-06 Mixed Long Session -->
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="TG-06 Perf-Mixed-LongSession(4Accounts)" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Mixed Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">-1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__groovy((props.get('run.profile','all') in ['all','perf_mixed']) ? props.get('perf.mixed.threads','4') : '0',)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(perf.mixed.rampup,5)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(perf.mixed.duration.seconds,1800)}</stringProp>
+        <stringProp name="ThreadGroup.delay">0</stringProp>
+        <longProp name="ThreadGroup.start_time">1710000000000</longProp>
+        <longProp name="ThreadGroup.end_time">1710000000000</longProp>
+      </ThreadGroup>
+      <hashTree>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV - accounts.csv" enabled="true">
+          <stringProp name="filename">${__P(accounts.file,jmeter/data/accounts.csv)}</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">username,password,mac</stringProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="shareMode">shareMode.current_thread</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <JSR223Sampler guiclass="TestBeanGUI" testclass="JSR223Sampler" testname="INIT - mixed vars" enabled="true">
+          <stringProp name="scriptLanguage">groovy</stringProp>
+          <stringProp name="script">vars.put('courseId', props.get('courseId', '2032055666142167042'))
+vars.put('teachingTaskId', props.get('teachingTaskId', '2033505568785190913'))
+vars.put('blockId', props.get('blockId', '3O00nCpPKp'))
+vars.put('authPrefix', props.get('auth.prefix', 'Bearer '))
+vars.put('clientKeyHeader', props.get('clientKey', 'test-client'))
+vars.put('clientVersionHeader', props.get('clientVersion', 'V1.0'))</stringProp>
+        </JSR223Sampler>
+        <hashTree/>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Headers - mixed common" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="Content-Type" elementType="Header"><stringProp name="Header.name">Content-Type</stringProp><stringProp name="Header.value">application/json</stringProp></elementProp>
+            <elementProp name="clientKey" elementType="Header"><stringProp name="Header.name">clientKey</stringProp><stringProp name="Header.value">${clientKeyHeader}</stringProp></elementProp>
+            <elementProp name="clientVersion" elementType="Header"><stringProp name="Header.name">clientVersion</stringProp><stringProp name="Header.value">${clientVersionHeader}</stringProp></elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-Login" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{&quot;userName&quot;:&quot;${username}&quot;,&quot;password&quot;:&quot;${password}&quot;,&quot;mac&quot;:&quot;${mac}&quot;}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+            </collectionProp>
+          </elementProp>
+          <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+          <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/login</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - mixed accessToken" enabled="true">
+            <stringProp name="JSONPostProcessor.referenceNames">accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data.accessToken</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Mixed online loop" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">-1</stringProp>
+        </LoopController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-Heartbeat" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"><elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">{}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp></collectionProp></elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/base/v1/heartbeat</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+            <hashTree/>
+          </hashTree>
+          <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Timer - heartbeat interval" enabled="true">
+            <stringProp name="ConstantTimer.delay">${__groovy((props.get('perf.mixed.heartbeat.seconds','10') as int) * 1000,)}</stringProp>
+          </ConstantTimer>
+          <hashTree/>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-QueryCourseList" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/queryCourseList</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-GetChapterTaskList" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments"><collectionProp name="Arguments.arguments"/></elementProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=${courseId}&amp;teachingTaskId=${teachingTaskId}</stringProp>
+            <stringProp name="HTTPSampler.method">GET</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+            <hashTree/>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Extract - mixed userReportId" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">dynamicUserReportId</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].chapterTaskInfoList[0].userReportId</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues"></stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-saveQuestionAnswer" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">${saveQuestionAnswerBody}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+              </collectionProp>
+            </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <stringProp name="HTTPSampler.path">/admin/nexalapi/exp/v1/saveQuestionAnswer</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSR223PreProcessor guiclass="TestBeanGUI" testclass="JSR223PreProcessor" testname="Build mixed random subtitleanswer" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="script">import groovy.json.JsonOutput
+def username = vars.get('username') ?: 'unknown'
+def seed = username + '_' + ctx.getThreadNum() + '_' + vars.getIteration() + '_' + System.currentTimeMillis()
+def rnd = new Random((seed.hashCode() as long) ^ System.nanoTime())
+def a = (rnd.nextInt(89) + 10).toString()
+def b = (rnd.nextInt(89) + 10).toString()
+def c = (rnd.nextInt(89) + 10).toString()
+def subtitle = [sub1:a, sub2:b, sub3:c]
+def payload = [
+  courseId: vars.get('courseId'),
+  teachingTaskId: vars.get('teachingTaskId'),
+  blockId: vars.get('blockId'),
+  userReportId: vars.get('dynamicUserReportId'),
+  questionId: props.get('answer.fallback.questionId', 'YndHSdJkXa'),
+  answer: subtitle.values().join('|'),
+  subtitleanswer: subtitle
+]
+vars.put('saveQuestionAnswerBody', JsonOutput.toJson(payload))
+def record = [
+  courseId: vars.get('courseId'),
+  teachingTaskId: vars.get('teachingTaskId'),
+  blockId: vars.get('blockId'),
+  userReportId: vars.get('dynamicUserReportId'),
+  answerRecord: JsonOutput.toJson([subtitleanswer: subtitle, seed: seed])
+]
+vars.put('saveExpAnswerRecordBody', JsonOutput.toJson(record))</stringProp>
+            </JSR223PreProcessor>
+            <hashTree/>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+            <hashTree/>
+          </hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="MIXED-saveExpAnswerRecord" enabled="true">
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument"><boolProp name="HTTPArgument.always_encode">false</boolProp><stringProp name="Argument.value">${saveExpAnswerRecordBody}</stringProp><stringProp name="Argument.metadata">=</stringProp></elementProp>
+              </collectionProp>
+            </elementProp>
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <stringProp name="HTTPSampler.path">/admin/camClientExpAnswerRecord/saveExpAnswerRecord</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="Header - auth" enabled="true"><collectionProp name="HeaderManager.headers"><elementProp name="Authorization" elementType="Header"><stringProp name="Header.name">Authorization</stringProp><stringProp name="Header.value">${authPrefix}${accessToken}</stringProp></elementProp></collectionProp></HeaderManager>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
