@@ -1,0 +1,3005 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testResults version="1.2">
+<sample t="30" it="0" lt="0" ct="0" ts="1773747281704" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zhengpengst" answerSignature="">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="68" it="0" lt="65" ct="12" ts="1773747281816" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="zhengpengst" answerSignature="">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:41 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zhengpengst&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;98409958646&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="0" ts="1773747281899" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zhengpengst" answerSignature="">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:41 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="27" it="0" lt="27" ct="1" ts="1773747281926" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zhengpengst" answerSignature="">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:41 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="1" ts="1773747282130" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:1353|Uv9NC4virf:2975|lHBYTCtXty:3543">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;1353&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;2975&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;3543&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747282167" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1353|Uv9NC4virf:2975|lHBYTCtXty:3543">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="43" it="0" lt="43" ct="1" ts="1773747282167" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="354" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1353|Uv9NC4virf:2975|lHBYTCtXty:3543">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 65
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;hlqiongs&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;42576219586&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="27" ct="0" ts="1773747282211" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1353|Uv9NC4virf:2975|lHBYTCtXty:3543">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="28" ct="1" ts="1773747282239" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1353|Uv9NC4virf:2975|lHBYTCtXty:3543">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="0" ts="1773747282269" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:7476|Uv9NC4virf:2646|lHBYTCtXty:6499">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;7476&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;2646&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;6499&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747282295" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:7476|Uv9NC4virf:2646|lHBYTCtXty:6499">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="42" it="0" lt="42" ct="0" ts="1773747282296" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="353" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:7476|Uv9NC4virf:2646|lHBYTCtXty:6499">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 64
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zshaos1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;68500234486&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="28" ct="1" ts="1773747282338" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:7476|Uv9NC4virf:2646|lHBYTCtXty:6499">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="27" it="0" lt="27" ct="0" ts="1773747282367" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:7476|Uv9NC4virf:2646|lHBYTCtXty:6499">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="27" it="0" lt="27" ct="0" ts="1773747282397" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2558|Uv9NC4virf:4212|lHBYTCtXty:6813">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;2558&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;4212&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;6813&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747282425" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2558|Uv9NC4virf:4212|lHBYTCtXty:6813">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="49" it="0" lt="49" ct="0" ts="1773747282426" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2558|Uv9NC4virf:4212|lHBYTCtXty:6813">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;huyonglans1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;11386681703&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="0" ts="1773747282476" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2558|Uv9NC4virf:4212|lHBYTCtXty:6813">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="0" ts="1773747282503" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2558|Uv9NC4virf:4212|lHBYTCtXty:6813">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="1" ts="1773747282530" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="718" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:5260|Uv9NC4virf:68|lHBYTCtXty:6660">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 392
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;5260&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;68&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;6660&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747282559" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:5260|Uv9NC4virf:68|lHBYTCtXty:6660">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="40" it="0" lt="40" ct="0" ts="1773747282560" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:5260|Uv9NC4virf:68|lHBYTCtXty:6660">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zhengpengst&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;38184928377&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="0" ts="1773747282601" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:5260|Uv9NC4virf:68|lHBYTCtXty:6660">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="0" ts="1773747282627" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:5260|Uv9NC4virf:68|lHBYTCtXty:6660">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="24" it="0" lt="24" ct="0" ts="1773747282654" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:5761|Uv9NC4virf:2707|lHBYTCtXty:8997">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;5761&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;2707&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;8997&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747282679" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5761|Uv9NC4virf:2707|lHBYTCtXty:8997">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="42" it="0" lt="42" ct="1" ts="1773747282679" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="354" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5761|Uv9NC4virf:2707|lHBYTCtXty:8997">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 65
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;hlqiongs&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;93179548492&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="0" ts="1773747282722" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5761|Uv9NC4virf:2707|lHBYTCtXty:8997">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="24" it="0" lt="24" ct="1" ts="1773747282748" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5761|Uv9NC4virf:2707|lHBYTCtXty:8997">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="0" ts="1773747282774" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:2774|Uv9NC4virf:9328|lHBYTCtXty:2874">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;2774&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;9328&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;2874&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747282800" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2774|Uv9NC4virf:9328|lHBYTCtXty:2874">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="43" it="0" lt="43" ct="1" ts="1773747282800" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="353" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2774|Uv9NC4virf:9328|lHBYTCtXty:2874">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 64
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zshaos1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;75889255812&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="1" ts="1773747282844" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2774|Uv9NC4virf:9328|lHBYTCtXty:2874">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="24" ct="0" ts="1773747282870" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2774|Uv9NC4virf:9328|lHBYTCtXty:2874">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="24" it="0" lt="24" ct="1" ts="1773747282896" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:7229|Uv9NC4virf:6138|lHBYTCtXty:3490">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:42 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;7229&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;6138&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;3490&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747282921" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:7229|Uv9NC4virf:6138|lHBYTCtXty:3490">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="45" it="0" lt="45" ct="1" ts="1773747282921" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:7229|Uv9NC4virf:6138|lHBYTCtXty:3490">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;huyonglans1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;12100505281&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="0" ts="1773747282967" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:7229|Uv9NC4virf:6138|lHBYTCtXty:3490">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="25" it="0" lt="25" ct="1" ts="1773747282992" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:7229|Uv9NC4virf:6138|lHBYTCtXty:3490">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="1" ts="1773747283019" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:6746|Uv9NC4virf:3025|lHBYTCtXty:2486">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;6746&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;3025&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;2486&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="1" it="0" lt="0" ct="0" ts="1773747283049" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:6746|Uv9NC4virf:3025|lHBYTCtXty:2486">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="45" it="0" lt="45" ct="0" ts="1773747283050" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:6746|Uv9NC4virf:3025|lHBYTCtXty:2486">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zhengpengst&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;11909799847&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="1" ts="1773747283096" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:6746|Uv9NC4virf:3025|lHBYTCtXty:2486">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="32" it="0" lt="32" ct="0" ts="1773747283123" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:6746|Uv9NC4virf:3025|lHBYTCtXty:2486">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="27" it="0" lt="27" ct="1" ts="1773747283157" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:1087|Uv9NC4virf:7587|lHBYTCtXty:8750">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;1087&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;7587&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;8750&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747283185" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1087|Uv9NC4virf:7587|lHBYTCtXty:8750">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="45" it="0" lt="45" ct="1" ts="1773747283185" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="354" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1087|Uv9NC4virf:7587|lHBYTCtXty:8750">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 65
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;hlqiongs&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;66096248963&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="1" ts="1773747283231" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1087|Uv9NC4virf:7587|lHBYTCtXty:8750">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="31" it="0" lt="31" ct="1" ts="1773747283258" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1087|Uv9NC4virf:7587|lHBYTCtXty:8750">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="28" ct="1" ts="1773747283292" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:3684|Uv9NC4virf:4466|lHBYTCtXty:7223">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;3684&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;4466&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;7223&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="1" it="0" lt="0" ct="0" ts="1773747283321" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:3684|Uv9NC4virf:4466|lHBYTCtXty:7223">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="47" it="0" lt="47" ct="1" ts="1773747283322" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="353" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:3684|Uv9NC4virf:4466|lHBYTCtXty:7223">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 64
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zshaos1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;22333948303&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="28" ct="1" ts="1773747283370" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:3684|Uv9NC4virf:4466|lHBYTCtXty:7223">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="28" ct="1" ts="1773747283400" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:3684|Uv9NC4virf:4466|lHBYTCtXty:7223">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="1" ts="1773747283432" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2738|Uv9NC4virf:2664|lHBYTCtXty:8157">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;2738&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;2664&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;8157&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="1" it="0" lt="0" ct="0" ts="1773747283460" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2738|Uv9NC4virf:2664|lHBYTCtXty:8157">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="46" it="0" lt="46" ct="1" ts="1773747283462" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2738|Uv9NC4virf:2664|lHBYTCtXty:8157">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;huyonglans1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;63457485731&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="30" it="0" lt="30" ct="2" ts="1773747283509" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2738|Uv9NC4virf:2664|lHBYTCtXty:8157">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="30" it="0" lt="30" ct="1" ts="1773747283541" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:2738|Uv9NC4virf:2664|lHBYTCtXty:8157">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="1" ts="1773747283575" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:8351|Uv9NC4virf:6765|lHBYTCtXty:8513">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;8351&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;6765&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;8513&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747283603" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:8351|Uv9NC4virf:6765|lHBYTCtXty:8513">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="45" it="0" lt="45" ct="1" ts="1773747283604" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:8351|Uv9NC4virf:6765|lHBYTCtXty:8513">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zhengpengst&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;45702874966&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="30" it="0" lt="30" ct="1" ts="1773747283650" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:8351|Uv9NC4virf:6765|lHBYTCtXty:8513">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="1" ts="1773747283681" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:8351|Uv9NC4virf:6765|lHBYTCtXty:8513">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="23" it="0" lt="23" ct="1" ts="1773747283715" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="719" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:2938|Uv9NC4virf:2327|lHBYTCtXty:786">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 393
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;2938&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;2327&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;786&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747283740" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:2938|Uv9NC4virf:2327|lHBYTCtXty:786">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="45" it="0" lt="45" ct="1" ts="1773747283741" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="354" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:2938|Uv9NC4virf:2327|lHBYTCtXty:786">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 65
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;hlqiongs&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;84743362366&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="0" ts="1773747283787" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:2938|Uv9NC4virf:2327|lHBYTCtXty:786">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="28" ct="1" ts="1773747283817" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:2938|Uv9NC4virf:2327|lHBYTCtXty:786">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="26" it="0" lt="26" ct="0" ts="1773747283848" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:2410|Uv9NC4virf:6478|lHBYTCtXty:7603">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;2410&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;6478&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;7603&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747283875" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2410|Uv9NC4virf:6478|lHBYTCtXty:7603">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="47" it="0" lt="47" ct="1" ts="1773747283876" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="353" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2410|Uv9NC4virf:6478|lHBYTCtXty:7603">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 64
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zshaos1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;56168324719&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="31" it="0" lt="31" ct="1" ts="1773747283924" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2410|Uv9NC4virf:6478|lHBYTCtXty:7603">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:43 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="33" it="0" lt="33" ct="1" ts="1773747283956" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:2410|Uv9NC4virf:6478|lHBYTCtXty:7603">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="28" ct="1" ts="1773747283993" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:8176|Uv9NC4virf:8515|lHBYTCtXty:2297">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;8176&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;8515&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;2297&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747284023" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:8176|Uv9NC4virf:8515|lHBYTCtXty:2297">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="45" it="0" lt="45" ct="1" ts="1773747284024" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:8176|Uv9NC4virf:8515|lHBYTCtXty:2297">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;huyonglans1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;30659511514&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="30" it="0" lt="30" ct="1" ts="1773747284070" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:8176|Uv9NC4virf:8515|lHBYTCtXty:2297">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="1" ts="1773747284101" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:8176|Uv9NC4virf:8515|lHBYTCtXty:2297">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="27" it="0" lt="26" ct="1" ts="1773747284134" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:4684|Uv9NC4virf:5537|lHBYTCtXty:6427">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;4684&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;5537&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;6427&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747284163" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:4684|Uv9NC4virf:5537|lHBYTCtXty:6427">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="43" it="0" lt="43" ct="1" ts="1773747284164" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:4684|Uv9NC4virf:5537|lHBYTCtXty:6427">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zhengpengst&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;70249628532&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="1" ts="1773747284209" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:4684|Uv9NC4virf:5537|lHBYTCtXty:6427">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="28" ct="1" ts="1773747284240" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:4684|Uv9NC4virf:5537|lHBYTCtXty:6427">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="1" ts="1773747284272" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zhengpengst" answerSignature="ribcrlV6xK:5109|Uv9NC4virf:8124|lHBYTCtXty:5792">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;5109&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;8124&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;5792&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747284303" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5109|Uv9NC4virf:8124|lHBYTCtXty:5792">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="45" it="0" lt="45" ct="1" ts="1773747284304" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="354" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5109|Uv9NC4virf:8124|lHBYTCtXty:5792">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 65
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;hlqiongs&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;77751411427&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="1" ts="1773747284350" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5109|Uv9NC4virf:8124|lHBYTCtXty:5792">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="0" ts="1773747284381" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:5109|Uv9NC4virf:8124|lHBYTCtXty:5792">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="28" it="0" lt="27" ct="1" ts="1773747284414" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="hlqiongs" answerSignature="ribcrlV6xK:1539|Uv9NC4virf:3801|lHBYTCtXty:3190">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;1539&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;3801&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;3190&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747284443" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:1539|Uv9NC4virf:3801|lHBYTCtXty:3190">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="46" it="0" lt="46" ct="0" ts="1773747284445" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="353" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:1539|Uv9NC4virf:3801|lHBYTCtXty:3190">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 64
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;zshaos1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;72953027063&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="30" it="0" lt="30" ct="0" ts="1773747284492" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:1539|Uv9NC4virf:3801|lHBYTCtXty:3190">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="31" it="0" lt="31" ct="1" ts="1773747284523" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:1539|Uv9NC4virf:3801|lHBYTCtXty:3190">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+<httpSample t="30" it="0" lt="30" ct="0" ts="1773747284557" s="false" lb="PERF-004-saveQuestionAnswer" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="720" ng="1" na="1" username="zshaos1" answerSignature="ribcrlV6xK:5383|Uv9NC4virf:3520|lHBYTCtXty:3329">
+  <assertionResult>
+    <name>Assert - perf answer no 500</name>
+    <failure>false</failure>
+    <error>false</error>
+  </assertionResult>
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 394
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userReportId&quot;:&quot;&quot;,&quot;questionAnswerList&quot;:[{&quot;blockId&quot;:&quot;oaXh7gOyKt&quot;,&quot;blockType&quot;:&quot;SingleChoice&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;&quot;,&quot;subtitleAnswer&quot;:&quot;uD2mKpkAmc&quot;}]},{&quot;blockId&quot;:&quot;YndHSdJkXa&quot;,&quot;blockType&quot;:&quot;GapFilling&quot;,&quot;subtitleAnswerList&quot;:[{&quot;subtitleId&quot;:&quot;ribcrlV6xK&quot;,&quot;subtitleAnswer&quot;:&quot;5383&quot;},{&quot;subtitleId&quot;:&quot;Uv9NC4virf&quot;,&quot;subtitleAnswer&quot;:&quot;3520&quot;},{&quot;subtitleId&quot;:&quot;lHBYTCtXty&quot;,&quot;subtitleAnswer&quot;:&quot;3329&quot;}]}]}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/exp/v1/saveQuestionAnswer</java.net.URL>
+</httpSample>
+<sample t="0" it="0" lt="0" ct="0" ts="1773747284588" s="true" lb="INIT - perf answer vars" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="0" sby="0" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:5383|Uv9NC4virf:3520|lHBYTCtXty:3329">
+  <responseHeader class="java.lang.String"></responseHeader>
+  <requestHeader class="java.lang.String"></requestHeader>
+  <responseData class="java.lang.String"></responseData>
+  <samplerData class="java.lang.String">vars.put(&apos;courseId&apos;, (props[&apos;courseId&apos;] ?: &apos;2032055666142167042&apos;))
+vars.put(&apos;teachingTaskId&apos;, (props[&apos;teachingTaskId&apos;] ?: &apos;2033505568785190913&apos;))
+vars.put(&apos;blockId&apos;, (props[&apos;blockId&apos;] ?: &apos;3O00nCpPKp&apos;))
+vars.put(&apos;authPrefix&apos;, (props[&apos;auth.prefix&apos;] ?: &apos;Bearer &apos;))
+vars.put(&apos;clientKeyHeader&apos;, (props[&apos;clientKey&apos;] ?: &apos;test-client&apos;))
+vars.put(&apos;clientVersionHeader&apos;, (props[&apos;clientVersion&apos;] ?: &apos;V1.0&apos;))</samplerData>
+</sample>
+<httpSample t="47" it="0" lt="47" ct="1" ts="1773747284588" s="true" lb="PERF-004-login-setup" rc="200" rm="OK" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="801" sby="357" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:5383|Uv9NC4virf:3520|lHBYTCtXty:3329">
+  <responseHeader class="java.lang.String">HTTP/1.1 200 OK
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Transfer-Encoding: chunked
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Content-Length: 68
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;当前设备登录人数过多,请稍后再试!&quot;,&quot;data&quot;:null,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">POST</method>
+  <queryString class="java.lang.String">{&quot;userName&quot;:&quot;huyonglans1&quot;,&quot;password&quot;:&quot;P3+GebaL&quot;,&quot;mac&quot;:&quot;19596473964&quot;}</queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/base/v1/login</java.net.URL>
+</httpSample>
+<httpSample t="32" it="0" lt="32" ct="1" ts="1773747284635" s="false" lb="PERF-003-getCourseChapterTaskList" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="379" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:5383|Uv9NC4virf:3520|lHBYTCtXty:3329">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913</java.net.URL>
+</httpSample>
+<httpSample t="29" it="0" lt="29" ct="0" ts="1773747284668" s="false" lb="PERF-003-queryExpGuidebookContent" rc="401" rm="Unauthorized" tn="TG-05 Perf-saveQuestionAnswer-Focus 5-1" dt="text" by="684" sby="412" ng="1" na="1" username="huyonglans1" answerSignature="ribcrlV6xK:5383|Uv9NC4virf:3520|lHBYTCtXty:3329">
+  <responseHeader class="java.lang.String">HTTP/1.1 401 Unauthorized
+Server: nginx/1.20.1
+Date: Tue, 17 Mar 2026 11:34:44 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 70
+Connection: keep-alive
+Expires: 0
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+X-XSS-Protection: 0
+Pragma: no-cache
+X-Content-Type-Options: nosniff
+Access-Control-Allow-Methods: GET,POST,OPTIONS,PUT,DELETE
+Access-Control-Allow-Headers: Authorization, Content-Type,clientversion, clientkey, tenant-id
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Credentials: true
+Access-Control-Max-Age: 86400
+</responseHeader>
+  <requestHeader class="java.lang.String">Connection: close
+Authorization: Bearer 
+Content-Type: application/json
+clientKey: test-client
+clientVersion: V1.0
+Host: 192.168.0.90
+Proxy-Connection: Keep-Alive
+User-Agent: Apache-HttpClient/4.5.14 (Java/21.0.10)
+</requestHeader>
+  <responseData class="java.lang.String">{&quot;code&quot;:1,&quot;msg&quot;:&quot;error&quot;,&quot;data&quot;:&quot;Bearer token is malformed&quot;,&quot;ok&quot;:false}</responseData>
+  <cookies class="java.lang.String"></cookies>
+  <method class="java.lang.String">GET</method>
+  <queryString class="java.lang.String"></queryString>
+  <java.net.URL>http://192.168.0.90/api/admin/nexalapi/resource/v1/queryExpGuidebookContent?courseId=2032055666142167042&amp;teachingTaskId=2033505568785190913&amp;blockId=3O00nCpPKp&amp;userReportId=</java.net.URL>
+</httpSample>
+
+</testResults>

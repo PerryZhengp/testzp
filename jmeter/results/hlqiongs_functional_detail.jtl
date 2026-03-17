@@ -1,0 +1,21 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1773740161404,49,INIT - keepalive vars,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,0,0,1,2,null,0,0,0
+1773740161404,258,INIT - Load Mapping & Runtime Vars,200,OK,TG-01 Functional-MainFlow 1-1,text,true,,0,0,1,2,null,0,0,0
+1773740161663,38,FUNC-Login,500,Internal Server Error,TG-01 Functional-MainFlow 1-1,text,false,"Test failed: text expected to contain /""code"":0/",800,359,1,2,http://192.168.0.90/api/admin/nexalapi/base/v1/login,37,0,0
+1773740161733,12,FUNC-QueryCourseList,401,Unauthorized,TG-01 Functional-MainFlow 1-1,text,false,"Test failed: text expected to contain /""code"":0/",684,306,1,2,http://192.168.0.90/api/admin/nexalapi/resource/v1/queryCourseList,10,0,0
+1773740161746,28,FUNC-GetCourseChapterTaskList,401,Unauthorized,TG-01 Functional-MainFlow 1-1,text,false,"Test failed: text expected to contain /""code"":0/",684,379,1,2,http://192.168.0.90/api/admin/nexalapi/resource/v1/getCourseChapterTaskList?courseId=2032055666142167042&teachingTaskId=2033505568785190913,28,0,0
+1773740161790,6,MARK - PRECONDITION_MISSING userReportId,200,"PRECONDITION_MISSING: userReportId is empty, dependent positive APIs skipped",TG-01 Functional-MainFlow 1-1,text,true,,20,0,1,2,null,0,0,0
+1773740161797,20,FUNC-QuitTeachingTask,401,Unauthorized,TG-01 Functional-MainFlow 1-1,text,false,"Test failed: text expected to contain /""code"":0/",684,366,1,2,http://192.168.0.90/api/admin/nexalapi/exp/v1/quitTeachingTask?courseId=2032055666142167042&teachingTaskId=2033505568785190913,20,0,1
+1773740161818,26,FUNC-QuitCourse,401,Unauthorized,TG-01 Functional-MainFlow 1-1,text,false,"Test failed: text expected to contain /""code"":0/",684,325,1,2,http://192.168.0.90/api/admin/nexalapi/exp/v1/quitCourse?courseId=2032055666142167042,26,0,0
+1773740161845,24,FUNC-Logout,401,Unauthorized,TG-01 Functional-MainFlow 1-1,text,false,"Test failed: text expected to contain /""code"":0/",684,315,1,2,http://192.168.0.90/api/admin/nexalapi/base/v1/logout,24,0,0
+1773740161623,312,KA-Login,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,2163,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/login,312,0,23
+1773740171953,55,KA-Heartbeat,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,755,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/heartbeat,54,0,1
+1773740182012,40,KA-Heartbeat,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,755,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/heartbeat,40,0,2
+1773740192056,38,KA-Heartbeat,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,755,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/heartbeat,38,0,1
+1773740202101,44,KA-Heartbeat,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,755,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/heartbeat,44,0,2
+1773740212153,36,KA-Heartbeat,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,755,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/heartbeat,36,0,2
+1773740222196,33,KA-Heartbeat,200,OK,TG-02 Session-KeepAlive 2-1,text,true,,755,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/heartbeat,33,0,1
+1773740222233,55,KA-QueryCourseList-Alive [EXPECT_OK],200,OK,TG-02 Session-KeepAlive 2-1,text,true,,3071,342,1,1,http://192.168.0.90/api/admin/nexalapi/resource/v1/queryCourseList,55,0,1
+1773740257304,53,KA-QueryCourseList-AfterExpire [EXPECT_FAIL],200,OK,TG-02 Session-KeepAlive 2-1,text,false,Expected failure but got success: KA-QueryCourseList-AfterExpire [EXPECT_FAIL],3071,342,1,1,http://192.168.0.90/api/admin/nexalapi/resource/v1/queryCourseList,53,0,1
+1773740257358,31,KA-Heartbeat-AfterExpire [EXPECT_FAIL],200,OK,TG-02 Session-KeepAlive 2-1,text,false,Expected failure but got success: KA-Heartbeat-AfterExpire [EXPECT_FAIL],755,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/heartbeat,31,0,0
+1773740257390,48,KA-QueryCourseList-AfterExpiredHeartbeat [EXPECT_FAIL],200,OK,TG-02 Session-KeepAlive 2-1,text,false,Expected failure but got success: KA-QueryCourseList-AfterExpiredHeartbeat [EXPECT_FAIL],3071,342,1,1,http://192.168.0.90/api/admin/nexalapi/resource/v1/queryCourseList,48,0,0

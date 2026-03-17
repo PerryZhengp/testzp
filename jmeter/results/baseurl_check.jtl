@@ -1,0 +1,5 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1773739755801,63,PERF-001-login,500,Internal Server Error,TG-04 Perf-Login-Focus 4-1,text,false,HTTP 500 in login perf,800,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/login,61,0,11
+1773739755879,376,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,2146,357,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/login,375,0,1
+1773739756256,305,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,2163,354,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/login,305,0,0
+1773739756562,310,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,2148,353,1,1,http://192.168.0.90/api/admin/nexalapi/base/v1/login,310,0,1

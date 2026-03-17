@@ -1,0 +1,29 @@
+label,failed,total,fail_rate_pct,top_response_codes,top_failure_messages
+FUNC-GetCourseChapterTaskList,2,4,50.00,401:2,Unauthorized:2
+FUNC-Login,2,4,50.00,500:2,Internal Server Error:2
+FUNC-Logout,2,4,50.00,401:2,Unauthorized:2
+FUNC-QueryCourseList,2,4,50.00,401:2,Unauthorized:2
+FUNC-QuitCourse,2,4,50.00,401:2,Unauthorized:2
+FUNC-QuitTeachingTask,2,4,50.00,401:2,Unauthorized:2
+EX-CrossAccount-QueryContent [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-CrossAccount-saveExpAnswerRecord [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-CrossAccount-saveQuestionAnswer [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-EmptyToken-QueryCourseList [EXPECT_FAIL],1,1,100.00,401:1,Unauthorized:1
+EX-FakeToken-QueryCourseList [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-HeaderMissing-Logout [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-NoAuth-QueryCourseList [EXPECT_FAIL],1,1,100.00,500:1,Internal Server Error:1
+EX-ReuseToken-AfterLogout [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-blockId-empty [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-clientKey-compatible [EXPECT_OK],1,1,100.00,424:1,Failed Dependency:1
+EX-clientVersion-1.0.0 [EXPECT_OK],1,1,100.00,424:1,Failed Dependency:1
+EX-clientVersion-V1.0 [EXPECT_OK],1,1,100.00,424:1,Failed Dependency:1
+EX-clientVersion-v1.0 [EXPECT_OK],1,1,100.00,424:1,Failed Dependency:1
+EX-clientkey-compatible [EXPECT_OK],1,1,100.00,424:1,Failed Dependency:1
+EX-courseId-empty [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-courseId-illegal [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-teachingTaskId-empty [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-teachingTaskId-illegal [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+EX-userReportId-empty [EXPECT_FAIL],1,1,100.00,424:1,Failed Dependency:1
+KA-Heartbeat-AfterExpire [EXPECT_FAIL],1,1,100.00,200:1,OK:1
+KA-QueryCourseList-AfterExpire [EXPECT_FAIL],1,1,100.00,200:1,OK:1
+KA-QueryCourseList-AfterExpiredHeartbeat [EXPECT_FAIL],1,1,100.00,200:1,OK:1

@@ -1,0 +1,12 @@
+label,failed,total,fail_rate_pct,top_response_codes,top_failure_messages
+PERF-003-getCourseChapterTaskList,13123,13123,100.00,401:13123,Unauthorized:13123
+PERF-003-queryExpGuidebookContent,13123,13123,100.00,401:13123,Unauthorized:13123
+PERF-004-saveQuestionAnswer,13120,13120,100.00,401:13120,Unauthorized:13120
+PERF-001-login,10654,53267,20.00,500:10654,Internal Server Error:10654
+PERF-004-login-setup,2626,13126,20.01,500:2626,Internal Server Error:2626
+PERF-002-heartbeat,88,88,100.00,401:88,Unauthorized:88
+PERF-003-queryCourseList,88,88,100.00,401:88,Unauthorized:88
+PERF-003-getCourseChapterTaskList-mixed,84,84,100.00,401:84,Unauthorized:84
+PERF-004-saveExpAnswerRecord-mixed,84,84,100.00,401:84,Unauthorized:84
+PERF-004-saveQuestionAnswer-mixed,84,84,100.00,401:84,Unauthorized:84
+PERF-005-login,1,4,25.00,500:1,Internal Server Error:1

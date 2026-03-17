@@ -1,0 +1,58 @@
+{
+  "document": {
+    "author": "Peng Zheng",
+    "version": "V1.0",
+    "date": "2026-03-17",
+    "test_phase": "测试环境",
+    "tool": "JMeter"
+  },
+  "project": {
+    "name": "校园版接口自动化测试",
+    "performance_name": "校园版接口性能测试",
+    "base_url": "http://192.168.0.90/api"
+  },
+  "accounts": [
+    "zhengpengst",
+    "hlqiongs",
+    "zshaos1",
+    "huyonglans1"
+  ],
+  "base_data": {
+    "courseId": "2032055666142167042",
+    "teachingTaskId": "2033505568785190913",
+    "blockId": "3O00nCpPKp"
+  },
+  "thresholds": {
+    "error_rate_max_pct": 1.0,
+    "tp95_max_ms": 1000,
+    "success_rate_min_pct": 99.0
+  },
+  "performance_scene_config": {
+    "PERF-001": {
+      "concurrency": "10/50/100",
+      "duration": "5 min",
+      "desc": "单独测试登录接口性能"
+    },
+    "PERF-002": {
+      "concurrency": "50/100/200",
+      "duration": "10 min",
+      "desc": "验证心跳接口稳定性"
+    },
+    "PERF-003": {
+      "concurrency": "50",
+      "duration": "10 min",
+      "desc": "课程、目录、内容查询混合场景"
+    },
+    "PERF-004": {
+      "concurrency": "20/50",
+      "duration": "10 min",
+      "desc": "内容查询、答题、保存链路"
+    },
+    "PERF-005": {
+      "concurrency": "50/100",
+      "duration": "30-60 min",
+      "desc": "带 Heartbeat 的持续在线会话测试"
+    }
+  },
+  "release_recommendation": ""
+}

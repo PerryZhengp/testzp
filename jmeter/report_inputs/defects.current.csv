@@ -1,0 +1,11 @@
+id,severity,module,title,status
+DEF-001,严重,登录/认证,"FUNC-Login 在 4 账号中 2 账号失败，HTTP 500（2/4），导致正向主链路中断",OPEN
+DEF-002,严重,登录态/鉴权,"FUNC-QueryCourseList/FUNC-GetCourseChapterTaskList/FUNC-QuitTeachingTask/FUNC-QuitCourse/FUNC-Logout 出现 401（各 2/4），与前序登录失败链路强相关",OPEN
+DEF-003,严重,异常处理,"EX-NoAuth-QueryCourseList[EXPECT_FAIL] 返回 HTTP 500（1/1），异常拦截场景暴露服务端错误而非规范业务失败",OPEN
+DEF-004,一般,Header兼容,"EX-clientKey/clientkey + clientVersion 兼容性场景（EXPECT_OK）全部返回 424（5/5），大小写与版本值兼容不符合预期",OPEN
+DEF-005,严重,会话时序,"KA-QueryCourseList-AfterExpire / KA-Heartbeat-AfterExpire / KA-QueryCourseList-AfterExpiredHeartbeat 在 EXPECT_FAIL 场景返回 200（各 1/1），疑似 Token 过期机制校验失效",OPEN
+DEF-006,严重,性能-登录,"PERF-001-login 压测错误率 20.00%（10654/53267），失败主要为 HTTP 500 Internal Server Error",OPEN
+DEF-007,严重,性能-答题链路,"PERF-004-saveQuestionAnswer 压测 100% 失败（13120/13120），HTTP 401 Unauthorized",OPEN
+DEF-008,严重,性能-查询链路,"PERF-003-getCourseChapterTaskList + PERF-003-queryExpGuidebookContent 压测 100% 失败（各 13123/13123），HTTP 401 Unauthorized",OPEN
+DEF-009,一般,性能-保活,"PERF-002-heartbeat 压测 100% 失败（88/88），HTTP 401 Unauthorized",OPEN
+DEF-010,建议,数据与环境,"PERF-005 长稳场景按测试执行过程中人工提前停止（约 17m），建议在修复高优先级缺陷后补齐 30-60 分钟完整窗口复测",OPEN

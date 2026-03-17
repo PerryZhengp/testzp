@@ -1,0 +1,16 @@
+timeStamp,elapsed,label,responseCode,responseMessage,threadName,dataType,success,failureMessage,bytes,sentBytes,grpThreads,allThreads,URL,Latency,IdleTime,Connect
+1773737382461,60,PERF-001-login,500,Internal Server Error,TG-04 Perf-Login-Focus 4-1,text,false,HTTP 500 in login perf,621,360,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,57,0,11
+1773737382537,313,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1968,363,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,312,0,0
+1773737382853,282,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1985,360,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,282,0,1
+1773737383136,376,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1970,359,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,376,0,1
+1773737383515,304,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1974,363,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,304,0,1
+1773737383826,38,PERF-001-login,500,Internal Server Error,TG-04 Perf-Login-Focus 4-1,text,false,HTTP 500 in login perf,621,360,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,38,0,1
+1773737383868,257,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1968,363,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,257,0,1
+1773737384127,229,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1985,360,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,228,0,1
+1773737384360,213,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1970,359,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,213,0,1
+1773737384577,203,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1974,363,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,203,0,1
+1773737384786,34,PERF-001-login,500,Internal Server Error,TG-04 Perf-Login-Focus 4-1,text,false,HTTP 500 in login perf,621,360,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,34,0,1
+1773737384824,170,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1968,363,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,169,0,2
+1773737385002,169,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1985,360,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,169,0,1
+1773737385174,169,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1970,359,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,168,0,1
+1773737385346,166,PERF-001-login,200,OK,TG-04 Perf-Login-Focus 4-1,text,true,,1974,363,1,1,http://192.168.0.90:9999/admin/nexalapi/base/v1/login,166,0,1
