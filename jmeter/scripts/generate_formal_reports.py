@@ -699,6 +699,49 @@ def top_failure_rows(records: Sequence[JtlRecord], limit: int = 20) -> List[List
     return rows
 
 
+def _case_group(label: str) -> str:
+    if label.startswith("FUNC-"):
+        return "正向主链路"
+    if label.startswith("EX-"):
+        return "异常/边界"
+    if label.startswith("KA-"):
+        return "会话时序"
+    return "其它"
+
+
+def _case_expectation(label: str) -> str:
+    if "[EXPECT_FAIL]" in label:
+        return "期望失败"
+    return "期望成功"
+
+
+def full_case_detail_rows(
+    expected_labels: Sequence[str],
+    case_map: Dict[str, Dict[str, Any]],
+) -> List[List[Any]]:
+    rows: List[List[Any]] = []
+    for lb in expected_labels:
+        data = case_map.get(lb)
+        if not data:
+            rows.append([lb, _case_group(lb), _case_expectation(lb), 0, 0, 0, "-", "未执行", "未执行"])
+            continue
+
+        total = int(data.get("executions", 0))
+        fail = int(data.get("failures", 0))
+        passed = max(total - fail, 0)
+        codes: Counter = data.get("response_codes", Counter())
+        code_text = ", ".join([f"{k}:{cnt}" for k, cnt in codes.most_common(5)]) or "-"
+        fail_msgs = Counter(data.get("fail_msgs", []))
+        fail_reason = (
+            "; ".join([f"{_truncate(msg, 100)}({cnt})" for msg, cnt in fail_msgs.most_common(2)])
+            if fail_msgs
+            else "-"
+        )
+        verdict = "PASS" if fail == 0 else "FAIL"
+        rows.append([lb, _case_group(lb), _case_expectation(lb), total, passed, fail, code_text, verdict, fail_reason])
+    return rows
+
+
 def yes_no(v: bool) -> str:
     return "是" if v else "否"
 
@@ -798,6 +841,7 @@ def build_function_report_lines(
         for lb in case_map
     )
     functional_fail_rows = top_failure_rows(functional_filtered, limit=20)
+    functional_case_rows = full_case_detail_rows(executed_expected + unexecuted, case_map)
 
     sev = severity_counts(defects)
     severity_rank = {"致命": 0, "严重": 1, "一般": 2, "建议": 3}
@@ -973,7 +1017,19 @@ def build_function_report_lines(
     lines.extend(
         [
             "",
-            "6.5 关键图表",
+            "6.5 用例执行详情（全量）",
+        ]
+    )
+    lines.extend(
+        table_lines(
+            ["用例标签", "分类", "期望", "执行次数", "通过", "失败", "状态码分布", "结论", "失败原因摘要"],
+            functional_case_rows,
+        )
+    )
+    lines.extend(
+        [
+            "",
+            "6.6 关键图表",
             "[[CHART:FUNC_MODULE_PASS_FAIL]]",
             "[[CHART:FUNC_STATUS_CODE_DIST]]",
             "",
