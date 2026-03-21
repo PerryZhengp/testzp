@@ -1,0 +1,47 @@
+{
+  "createdAt": "2026-03-21T10:08:59.560Z",
+  "summary": {
+    "chapterCount": 1,
+    "levelCount": 3,
+    "interactableCount": 4
+  },
+  "levels": [
+    {
+      "id": "chapter1-level1",
+      "title": "L1 · First Steps",
+      "mechanics": [],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n3"
+    },
+    {
+      "id": "chapter1-level2",
+      "title": "L2 · Turning Tower",
+      "mechanics": [
+        "rotate"
+      ],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n3"
+    },
+    {
+      "id": "chapter1-level3",
+      "title": "L3 · Sliding Mirage",
+      "mechanics": [
+        "slide",
+        "lift",
+        "rotate"
+      ],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n4"
+    }
+  ],
+  "publicInterfaces": [
+    "LevelDef (with anchors)",
+    "EdgeDef.kind = real | conditional | illusory",
+    "SaveDataV1 (versioned save schema)",
+    "validate-levels CLI: input level directory, output machine-readable result"
+  ],
+  "notes": [
+    "Snapshot is generated before compression so future sessions can recover implementation context.",
+    "Use npm run package:zip to snapshot + package in one command."
+  ]
+}
