@@ -1,5 +1,16 @@
 import type { LevelDef, SaveDataV1 } from '../../shared/types/game';
 
+export interface InteractablePanelItem {
+  id: string;
+  name: string;
+  valueLabel: string;
+}
+
+export interface ReachableNodeItem {
+  id: string;
+  label: string;
+}
+
 export interface GameUIHandlers {
   onStartJourney: () => void;
   onSelectLevel: (levelId: string) => void;
@@ -11,6 +22,8 @@ export interface GameUIHandlers {
   onCloseSettings: () => void;
   onSettingPatch: (patch: Partial<SaveDataV1['settings']>) => void;
   onNextLevel: () => void;
+  onInteractablePanel: (interactableId: string) => void;
+  onMoveNodePanel: (nodeId: string) => void;
 }
 
 export class GameUI {
@@ -30,6 +43,16 @@ export class GameUI {
 
   private readonly hudSubtitle: HTMLDivElement;
 
+  private readonly controlDeck: HTMLDivElement;
+
+  private readonly nodeList: HTMLDivElement;
+
+  private readonly nodeEmpty: HTMLDivElement;
+
+  private readonly interactableList: HTMLDivElement;
+
+  private readonly interactableEmpty: HTMLDivElement;
+
   private readonly pauseOverlay: HTMLDivElement;
 
   private readonly completeOverlay: HTMLDivElement;
@@ -46,6 +69,14 @@ export class GameUI {
 
   private readonly toast: HTMLDivElement;
 
+  private interactableEnabled = true;
+
+  private nodeEnabled = true;
+
+  private readonly nodeButtons = new Map<string, HTMLButtonElement>();
+
+  private readonly interactableButtons = new Map<string, HTMLButtonElement>();
+
   constructor(container: HTMLElement, private readonly handlers: GameUIHandlers) {
     this.shell = document.createElement('div');
     this.shell.className = 'ui-shell';
@@ -53,21 +84,21 @@ export class GameUI {
     this.mainMenu = document.createElement('div');
     this.mainMenu.className = 'panel main-menu';
     this.mainMenu.innerHTML = `
-      <div class="menu-kicker">几何悖论实验室</div>
+      <div class="menu-kicker">UNFOLD THE IMPOSSIBLE</div>
       <h1>不可能几何</h1>
-      <p>在旋转、滑移与错视连边之间，找出看似不存在的路径。</p>
+      <p>把空间当作机关来调度。你不只是解谜者，也是建筑系统的操控者。</p>
       <div class="button-row">
         <button data-action="start">开始旅程</button>
         <button data-action="settings" class="ghost">系统设置</button>
       </div>
-      <div class="menu-footnote">操作提示：点击圆台移动，点击机关切换状态。</div>
+      <div class="menu-footnote">新交互：关内可直接在“机关控制台”切换机关状态。</div>
     `;
 
     this.levelSelect = document.createElement('div');
     this.levelSelect.className = 'panel level-select hidden';
     this.levelSelect.innerHTML = `
       <h2>第一章：浮空观象台</h2>
-      <p>先观察再行动，复杂关卡通常需要“先到位再改状态”。</p>
+      <p>建议按顺序挑战。后段关卡需要中途改态与多机关联动。</p>
       <div class="level-select-meta"></div>
       <div class="level-grid"></div>
       <div class="button-row">
@@ -82,7 +113,7 @@ export class GameUI {
     this.hud.innerHTML = `
       <div class="hud-left">
         <div class="hud-title">-</div>
-        <div class="hud-subtitle">目标：抵达发光终点环</div>
+        <div class="hud-subtitle">目标：抵达终点环，必要时在控制台中途改态</div>
       </div>
       <div class="hud-right">
         <button data-action="pause">暂停</button>
@@ -94,11 +125,36 @@ export class GameUI {
     this.hudTitle = this.hud.querySelector('.hud-title') as HTMLDivElement;
     this.hudSubtitle = this.hud.querySelector('.hud-subtitle') as HTMLDivElement;
 
+    this.controlDeck = document.createElement('div');
+    this.controlDeck.className = 'control-deck hidden';
+    this.controlDeck.innerHTML = `
+      <div class="control-deck-head">
+        <div class="control-title">机关控制台</div>
+        <div class="control-tip">所有可点击项都在这里</div>
+      </div>
+      <div class="control-grid">
+        <section class="control-block">
+          <div class="block-title">可前往节点</div>
+          <div class="node-list"></div>
+          <div class="node-empty">暂无可达节点</div>
+        </section>
+        <section class="control-block">
+          <div class="block-title">机关状态</div>
+          <div class="interactable-list"></div>
+          <div class="interactable-empty">本关无机关，专注路径观察即可。</div>
+        </section>
+      </div>
+    `;
+    this.nodeList = this.controlDeck.querySelector('.node-list') as HTMLDivElement;
+    this.nodeEmpty = this.controlDeck.querySelector('.node-empty') as HTMLDivElement;
+    this.interactableList = this.controlDeck.querySelector('.interactable-list') as HTMLDivElement;
+    this.interactableEmpty = this.controlDeck.querySelector('.interactable-empty') as HTMLDivElement;
+
     this.pauseOverlay = document.createElement('div');
     this.pauseOverlay.className = 'panel pause-overlay hidden';
     this.pauseOverlay.innerHTML = `
       <h2>挑战已暂停</h2>
-      <p>你可以继续当前解法，或回到本关起点重新规划。</p>
+      <p>可以继续当前推演，或回到起点重新规划。</p>
       <div class="button-row">
         <button data-action="resume">继续挑战</button>
         <button data-action="reset" class="ghost">重置本关</button>
@@ -165,6 +221,7 @@ export class GameUI {
       this.mainMenu,
       this.levelSelect,
       this.hud,
+      this.controlDeck,
       this.pauseOverlay,
       this.completeOverlay,
       this.settingsPanel,
@@ -179,6 +236,7 @@ export class GameUI {
   showMainMenu(): void {
     this.showOnly(this.mainMenu);
     this.hud.classList.add('hidden');
+    this.controlDeck.classList.add('hidden');
     this.pauseOverlay.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
     this.settingsPanel.classList.add('hidden');
@@ -188,6 +246,7 @@ export class GameUI {
   showLevelSelect(levels: LevelDef[], unlocked: Set<string>, completed: Set<string>): void {
     this.showOnly(this.levelSelect);
     this.hud.classList.add('hidden');
+    this.controlDeck.classList.add('hidden');
     this.pauseOverlay.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
 
@@ -222,15 +281,17 @@ export class GameUI {
     this.mainMenu.classList.add('hidden');
     this.levelSelect.classList.add('hidden');
     this.hud.classList.remove('hidden');
+    this.controlDeck.classList.remove('hidden');
     this.pauseOverlay.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
     this.hudTitle.textContent = levelTitle;
-    this.hudSubtitle.textContent = '目标：抵达终点环，必要时切换机关状态';
+    this.hudSubtitle.textContent = '目标：抵达终点环，必要时在控制台中途改态';
     this.setPaused(false);
   }
 
   setPaused(paused: boolean): void {
     this.pauseOverlay.classList.toggle('hidden', !paused);
+    this.controlDeck.classList.toggle('is-paused', paused);
     const pauseButton = this.hud.querySelector('[data-action="pause"]') as HTMLButtonElement;
     pauseButton.textContent = paused ? '继续' : '暂停';
   }
@@ -247,6 +308,69 @@ export class GameUI {
 
   hideCompletion(): void {
     this.completeOverlay.classList.add('hidden');
+  }
+
+  updateReachableNodes(items: ReachableNodeItem[]): void {
+    this.nodeButtons.clear();
+    this.nodeList.replaceChildren();
+
+    const hasItems = items.length > 0;
+    this.nodeList.classList.toggle('hidden', !hasItems);
+    this.nodeEmpty.classList.toggle('hidden', hasItems);
+
+    if (!hasItems) {
+      return;
+    }
+
+    for (const item of items) {
+      const button = document.createElement('button');
+      button.className = 'node-chip';
+      button.dataset.nodeId = item.id;
+      button.textContent = item.label;
+      button.disabled = !this.nodeEnabled;
+      this.nodeButtons.set(item.id, button);
+      this.nodeList.append(button);
+    }
+  }
+
+  setNodeEnabled(enabled: boolean): void {
+    this.nodeEnabled = enabled;
+    for (const button of this.nodeButtons.values()) {
+      button.disabled = !enabled;
+    }
+  }
+
+  updateInteractables(items: InteractablePanelItem[]): void {
+    this.interactableButtons.clear();
+    this.interactableList.replaceChildren();
+
+    const hasItems = items.length > 0;
+    this.interactableList.classList.toggle('hidden', !hasItems);
+    this.interactableEmpty.classList.toggle('hidden', hasItems);
+
+    if (!hasItems) {
+      return;
+    }
+
+    for (const item of items) {
+      const button = document.createElement('button');
+      button.className = 'interactable-chip';
+      button.dataset.interactableId = item.id;
+      button.innerHTML = `
+        <span class="chip-name">${item.name}</span>
+        <span class="chip-value">${item.valueLabel}</span>
+      `;
+      button.disabled = !this.interactableEnabled;
+      this.interactableButtons.set(item.id, button);
+      this.interactableList.append(button);
+    }
+  }
+
+  setInteractableEnabled(enabled: boolean): void {
+    this.interactableEnabled = enabled;
+    for (const button of this.interactableButtons.values()) {
+      button.disabled = !enabled;
+    }
   }
 
   showSettings(): void {
@@ -367,6 +491,36 @@ export class GameUI {
     this.settingsPanel
       .querySelector('[data-action="close-settings"]')
       ?.addEventListener('click', () => this.handlers.onCloseSettings());
+
+    this.nodeList.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest<HTMLButtonElement>('button[data-node-id]');
+      if (!button || button.disabled) {
+        return;
+      }
+
+      const nodeId = button.dataset.nodeId;
+      if (!nodeId) {
+        return;
+      }
+
+      this.handlers.onMoveNodePanel(nodeId);
+    });
+
+    this.interactableList.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement;
+      const button = target.closest<HTMLButtonElement>('button[data-interactable-id]');
+      if (!button || button.disabled) {
+        return;
+      }
+
+      const interactableId = button.dataset.interactableId;
+      if (!interactableId) {
+        return;
+      }
+
+      this.handlers.onInteractablePanel(interactableId);
+    });
 
     const numericKeys: Array<
       keyof Pick<SaveDataV1['settings'], 'masterVolume' | 'musicVolume' | 'sfxVolume'>

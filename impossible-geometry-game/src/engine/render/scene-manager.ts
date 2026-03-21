@@ -1,6 +1,8 @@
 import {
   AmbientLight,
+  CanvasTexture,
   BoxGeometry,
+  CircleGeometry,
   Color,
   CylinderGeometry,
   DirectionalLight,
@@ -12,6 +14,8 @@ import {
   MeshStandardMaterial,
   OrthographicCamera,
   Scene,
+  Sprite,
+  SpriteMaterial,
   SphereGeometry,
   TorusGeometry,
   Vector3,
@@ -28,6 +32,54 @@ interface LevelRuntimeLike {
   graph: WalkGraph;
   currentNodeId: string;
   interactableValues: Record<string, Scalar>;
+}
+
+function createLabelSprite(text: string, color = '#d8edff'): Sprite {
+  const canvas = document.createElement('canvas');
+  canvas.width = 512;
+  canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) {
+    return new Sprite();
+  }
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(8, 20, 39, 0.74)';
+  ctx.strokeStyle = 'rgba(189, 225, 255, 0.66)';
+  ctx.lineWidth = 4;
+  ctx.beginPath();
+  const radius = 20;
+  ctx.moveTo(radius, 6);
+  ctx.lineTo(canvas.width - radius, 6);
+  ctx.quadraticCurveTo(canvas.width - 6, 6, canvas.width - 6, radius);
+  ctx.lineTo(canvas.width - 6, canvas.height - radius);
+  ctx.quadraticCurveTo(canvas.width - 6, canvas.height - 6, canvas.width - radius, canvas.height - 6);
+  ctx.lineTo(radius, canvas.height - 6);
+  ctx.quadraticCurveTo(6, canvas.height - 6, 6, canvas.height - radius);
+  ctx.lineTo(6, radius);
+  ctx.quadraticCurveTo(6, 6, radius, 6);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  ctx.fillStyle = color;
+  ctx.font = '600 42px PingFang SC, Noto Sans SC, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+  const texture = new CanvasTexture(canvas);
+  texture.needsUpdate = true;
+
+  const material = new SpriteMaterial({
+    map: texture,
+    transparent: true,
+    depthTest: false
+  });
+
+  const sprite = new Sprite(material);
+  sprite.scale.set(1.8, 0.45, 1);
+  return sprite;
 }
 
 export class SceneManager {
@@ -128,13 +180,15 @@ export class SceneManager {
       this.worldGroup.add(group);
     }
 
-    const nodeGeometry = new CylinderGeometry(0.28, 0.28, 0.2, 16);
+    const nodeGeometry = new CircleGeometry(0.32, 24);
     const nodeMaterial = new MeshStandardMaterial({
-      color: '#5b7af9',
-      emissive: '#4f75f5',
-      emissiveIntensity: 0.18,
-      roughness: 0.46
+      color: '#7fa8ff',
+      emissive: '#6f9bff',
+      emissiveIntensity: 0.24,
+      roughness: 0.4,
+      metalness: 0.06
     });
+    const nodeRingGeometry = new TorusGeometry(0.34, 0.04, 10, 24);
 
     for (const node of runtime.level.nodes) {
       const anchorGroup = this.anchorGroups.get(node.anchorId);
@@ -143,16 +197,29 @@ export class SceneManager {
       }
 
       const mesh = new Mesh(nodeGeometry, nodeMaterial.clone());
-      mesh.position.set(node.localPosition[0], node.localPosition[1] + 0.12, node.localPosition[2]);
+      mesh.position.set(node.localPosition[0], node.localPosition[1] + 0.08, node.localPosition[2]);
+      mesh.rotation.x = -Math.PI / 2;
       mesh.userData.pickKind = 'node';
       mesh.userData.pickId = node.id;
+
+      const ring = new Mesh(
+        nodeRingGeometry,
+        new MeshStandardMaterial({
+          color: '#cfe1ff',
+          emissive: '#8cb6ff',
+          emissiveIntensity: 0.22,
+          roughness: 0.26,
+          metalness: 0.14
+        })
+      );
+      ring.rotation.x = Math.PI / 2;
+      ring.position.y = 0.05;
+      mesh.add(ring);
 
       anchorGroup.add(mesh);
       this.nodeMeshes.set(node.id, mesh);
       this.pickables.push(mesh);
     }
-
-    const interactableGeometry = new BoxGeometry(0.5, 0.5, 0.5);
 
     for (const [index, interactable] of runtime.level.interactables.entries()) {
       const anchorGroup = this.anchorGroups.get(interactable.anchorId);
@@ -160,21 +227,40 @@ export class SceneManager {
         continue;
       }
 
-      const material = new MeshStandardMaterial({
-        color: interactable.type === 'rotate' ? '#ff8b63' : interactable.type === 'slide' ? '#7ddc9f' : '#58c6ff',
-        emissive: '#12214d',
-        emissiveIntensity: 0.5,
-        roughness: 0.35,
-        metalness: 0.12
+      const baseColor =
+        interactable.type === 'rotate'
+          ? '#ff9f67'
+          : interactable.type === 'slide'
+            ? '#66d8aa'
+            : '#65c9ff';
+      const commonMaterial = new MeshStandardMaterial({
+        color: baseColor,
+        emissive: '#152b4e',
+        emissiveIntensity: 0.48,
+        roughness: 0.33,
+        metalness: 0.16
       });
 
-      const mesh = new Mesh(interactableGeometry, material);
-      mesh.position.set(0, 0.7 + index * 0.08, 0);
+      let mesh: Mesh;
+      if (interactable.type === 'rotate') {
+        mesh = new Mesh(new TorusGeometry(0.28, 0.08, 14, 34), commonMaterial);
+        mesh.rotation.x = Math.PI / 2;
+      } else if (interactable.type === 'slide') {
+        mesh = new Mesh(new BoxGeometry(0.72, 0.2, 0.28), commonMaterial);
+      } else {
+        mesh = new Mesh(new CylinderGeometry(0.18, 0.2, 0.62, 14), commonMaterial);
+      }
+
+      mesh.position.set(0, 0.66 + index * 0.08, 0);
       mesh.userData.pickKind = 'interactable';
       mesh.userData.pickId = interactable.id;
       mesh.userData.baseScale = mesh.scale.clone();
 
+      const label = createLabelSprite(interactable.displayName);
+      label.position.set(0, mesh.position.y + 0.45, 0);
+
       anchorGroup.add(mesh);
+      anchorGroup.add(label);
       this.interactableMeshes.set(interactable.id, mesh);
       this.pickables.push(mesh);
     }

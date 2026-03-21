@@ -1,4 +1,9 @@
-import type { HitTarget, LevelDef, SaveDataV1 } from '../../shared/types/game';
+import type {
+  HitTarget,
+  InteractableDef,
+  LevelDef,
+  SaveDataV1
+} from '../../shared/types/game';
 import { orderedLevels } from '../../content/levels';
 import { AnimationController } from '../../engine/animation/animation-controller';
 import { AudioService } from '../../engine/audio/audio-service';
@@ -10,7 +15,12 @@ import { LevelLoader } from '../../gameplay/level/level-loader';
 import { LevelRuntime } from '../../gameplay/level/level-runtime';
 import { MovementSystem } from '../../gameplay/movement/movement-system';
 import { SaveService } from '../../services/save/save-service';
-import { GameUI } from '../../ui/overlay/game-ui';
+import {
+  GameUI,
+  type InteractablePanelItem,
+  type ReachableNodeItem
+} from '../../ui/overlay/game-ui';
+import { bfsReachable } from '../../shared/utils/graph';
 import { GameStateMachine } from '../state/game-state-machine';
 
 declare global {
@@ -82,7 +92,9 @@ export class GameApp {
       onOpenSettings: () => this.ui.showSettings(),
       onCloseSettings: () => this.ui.hideSettings(),
       onSettingPatch: (patch) => this.patchSettings(patch),
-      onNextLevel: () => this.goToNextLevel()
+      onNextLevel: () => this.goToNextLevel(),
+      onInteractablePanel: (interactableId) => this.tryInteract(interactableId),
+      onMoveNodePanel: (nodeId) => this.tryMoveToNode(nodeId)
     });
 
     this.saveService = new SaveService(orderedLevels[0].id);
@@ -120,10 +132,14 @@ export class GameApp {
       if (movementUpdate.reachedNodeId) {
         this.runtime.setCurrentNode(movementUpdate.reachedNodeId);
         this.sceneManager.syncRuntime(this.runtime);
+        this.syncControlPanels();
       }
 
       if (movementUpdate.finished) {
         this.stateMachine.setPlayState('idle');
+        this.syncControlPanels();
+        this.ui.setNodeEnabled(true);
+        this.ui.setInteractableEnabled(true);
         this.audioService.ping('ok');
         this.checkGoalCompletion();
       }
@@ -191,6 +207,9 @@ export class GameApp {
     this.ui.hideSettings();
     this.ui.hideCompletion();
     this.ui.showPlaying(level.title);
+    this.syncControlPanels();
+    this.ui.setNodeEnabled(true);
+    this.ui.setInteractableEnabled(true);
   }
 
   private onTargetClick(target: HitTarget): void {
@@ -224,6 +243,8 @@ export class GameApp {
     }
 
     this.stateMachine.setPlayState('moving');
+    this.ui.setNodeEnabled(false);
+    this.ui.setInteractableEnabled(false);
     this.movement.begin(path, this.runtime.graph);
     this.audioService.ping('click');
     this.resetStallTimer();
@@ -236,6 +257,8 @@ export class GameApp {
 
     const step = this.interactionSystem.createStep(interactableId, this.saveData.settings.reducedMotion);
     this.stateMachine.setPlayState('interacting');
+    this.ui.setNodeEnabled(false);
+    this.ui.setInteractableEnabled(false);
     this.audioService.ping('click');
     this.resetStallTimer();
 
@@ -251,7 +274,10 @@ export class GameApp {
         this.interactionSystem.commit(step);
         this.runtime.rebuild(this.sceneManager.camera, this.sceneManager.aspect);
         this.sceneManager.syncRuntime(this.runtime);
+        this.syncControlPanels();
         this.stateMachine.setPlayState('idle');
+        this.ui.setNodeEnabled(true);
+        this.ui.setInteractableEnabled(true);
         this.audioService.ping('ok');
       }
     );
@@ -287,6 +313,8 @@ export class GameApp {
 
     this.audioService.ping('goal');
     this.ui.showCompletion(this.runtime.level.title, Boolean(next));
+    this.ui.setNodeEnabled(false);
+    this.ui.setInteractableEnabled(false);
   }
 
   private goToNextLevel(): void {
@@ -308,6 +336,8 @@ export class GameApp {
     if (this.stateMachine.appState === 'playing') {
       this.stateMachine.setAppState('paused');
       this.ui.setPaused(true);
+      this.ui.setNodeEnabled(false);
+      this.ui.setInteractableEnabled(false);
       this.input.setEnabled(false);
       return;
     }
@@ -315,6 +345,8 @@ export class GameApp {
     if (this.stateMachine.appState === 'paused') {
       this.stateMachine.setAppState('playing');
       this.ui.setPaused(false);
+      this.ui.setNodeEnabled(true);
+      this.ui.setInteractableEnabled(true);
       this.input.setEnabled(true);
     }
   }
@@ -334,6 +366,9 @@ export class GameApp {
     this.input.setEnabled(true);
     this.ui.setPaused(false);
     this.ui.hideCompletion();
+    this.syncControlPanels();
+    this.ui.setNodeEnabled(true);
+    this.ui.setInteractableEnabled(true);
     this.ui.notify('本关已重置');
     this.resetStallTimer();
   }
@@ -361,6 +396,48 @@ export class GameApp {
     }
 
     return orderedLevels[index + 1];
+  }
+
+  private syncControlPanels(): void {
+    if (!this.runtime) {
+      this.ui.updateReachableNodes([]);
+      this.ui.updateInteractables([]);
+      return;
+    }
+
+    const reachableIds = Array.from(bfsReachable(this.runtime.graph, this.runtime.currentNodeId)).filter(
+      (nodeId) => nodeId !== this.runtime?.currentNodeId
+    );
+    const nodeItems: ReachableNodeItem[] = reachableIds
+      .sort((a, b) => a.localeCompare(b))
+      .map((nodeId) => ({
+        id: nodeId,
+        label:
+          nodeId === this.runtime?.level.goalNodeId
+            ? `终点 · ${nodeId}`
+            : nodeId === this.runtime?.level.spawnNodeId
+              ? `起点 · ${nodeId}`
+              : `节点 · ${nodeId}`
+      }));
+    this.ui.updateReachableNodes(nodeItems);
+
+    const items: InteractablePanelItem[] = this.runtime.level.interactables.map((interactable) => ({
+      id: interactable.id,
+      name: interactable.displayName,
+      valueLabel: this.resolveInteractableLabel(interactable)
+    }));
+
+    this.ui.updateInteractables(items);
+  }
+
+  private resolveInteractableLabel(interactable: InteractableDef): string {
+    if (!this.runtime) {
+      return '-';
+    }
+
+    const value = this.runtime.getInteractableValue(interactable.id);
+    const state = interactable.states.find((item) => item.value === value);
+    return state?.label ?? String(value);
   }
 
   private registerDebugApi(): void {
