@@ -20,17 +20,23 @@ export class GameUI {
 
   private readonly levelSelect: HTMLDivElement;
 
+  private readonly levelSummary: HTMLDivElement;
+
   private readonly levelGrid: HTMLDivElement;
 
   private readonly hud: HTMLDivElement;
 
   private readonly hudTitle: HTMLDivElement;
 
+  private readonly hudSubtitle: HTMLDivElement;
+
   private readonly pauseOverlay: HTMLDivElement;
 
   private readonly completeOverlay: HTMLDivElement;
 
   private readonly completeTitle: HTMLDivElement;
+
+  private readonly completeDescription: HTMLDivElement;
 
   private readonly nextLevelButton: HTMLButtonElement;
 
@@ -47,24 +53,28 @@ export class GameUI {
     this.mainMenu = document.createElement('div');
     this.mainMenu.className = 'panel main-menu';
     this.mainMenu.innerHTML = `
-      <h1>Impossible Geometry</h1>
-      <p>Manipulate impossible structures and reveal hidden paths.</p>
+      <div class="menu-kicker">几何悖论实验室</div>
+      <h1>不可能几何</h1>
+      <p>在旋转、滑移与错视连边之间，找出看似不存在的路径。</p>
       <div class="button-row">
-        <button data-action="start">Start Journey</button>
-        <button data-action="settings" class="ghost">Settings</button>
+        <button data-action="start">开始旅程</button>
+        <button data-action="settings" class="ghost">系统设置</button>
       </div>
+      <div class="menu-footnote">操作提示：点击圆台移动，点击机关切换状态。</div>
     `;
 
     this.levelSelect = document.createElement('div');
     this.levelSelect.className = 'panel level-select hidden';
     this.levelSelect.innerHTML = `
-      <h2>Chapter I: Floating Observatory</h2>
-      <p>Select an unlocked level.</p>
+      <h2>第一章：浮空观象台</h2>
+      <p>先观察再行动，复杂关卡通常需要“先到位再改状态”。</p>
+      <div class="level-select-meta"></div>
       <div class="level-grid"></div>
       <div class="button-row">
-        <button data-action="back-main" class="ghost">Back</button>
+        <button data-action="back-main" class="ghost">返回主菜单</button>
       </div>
     `;
+    this.levelSummary = this.levelSelect.querySelector('.level-select-meta') as HTMLDivElement;
     this.levelGrid = this.levelSelect.querySelector('.level-grid') as HTMLDivElement;
 
     this.hud = document.createElement('div');
@@ -72,38 +82,43 @@ export class GameUI {
     this.hud.innerHTML = `
       <div class="hud-left">
         <div class="hud-title">-</div>
+        <div class="hud-subtitle">目标：抵达发光终点环</div>
       </div>
       <div class="hud-right">
-        <button data-action="pause">Pause</button>
-        <button data-action="reset" class="ghost">Reset</button>
-        <button data-action="back-levels" class="ghost">Levels</button>
-        <button data-action="settings" class="ghost">Settings</button>
+        <button data-action="pause">暂停</button>
+        <button data-action="reset" class="ghost">重置本关</button>
+        <button data-action="back-levels" class="ghost">返回选关</button>
+        <button data-action="settings" class="ghost">设置</button>
       </div>
     `;
     this.hudTitle = this.hud.querySelector('.hud-title') as HTMLDivElement;
+    this.hudSubtitle = this.hud.querySelector('.hud-subtitle') as HTMLDivElement;
 
     this.pauseOverlay = document.createElement('div');
     this.pauseOverlay.className = 'panel pause-overlay hidden';
     this.pauseOverlay.innerHTML = `
-      <h2>Paused</h2>
+      <h2>挑战已暂停</h2>
+      <p>你可以继续当前解法，或回到本关起点重新规划。</p>
       <div class="button-row">
-        <button data-action="resume">Resume</button>
-        <button data-action="reset" class="ghost">Reset Level</button>
-        <button data-action="back-levels" class="ghost">Back to Levels</button>
+        <button data-action="resume">继续挑战</button>
+        <button data-action="reset" class="ghost">重置本关</button>
+        <button data-action="back-levels" class="ghost">回到选关</button>
       </div>
     `;
 
     this.completeOverlay = document.createElement('div');
     this.completeOverlay.className = 'panel complete-overlay hidden';
     this.completeOverlay.innerHTML = `
-      <h2>Level Completed</h2>
+      <h2>关卡完成</h2>
       <div class="complete-title"></div>
+      <div class="complete-desc"></div>
       <div class="button-row">
-        <button data-action="next-level">Next Level</button>
-        <button data-action="back-levels" class="ghost">Level Select</button>
+        <button data-action="next-level">进入下一关</button>
+        <button data-action="back-levels" class="ghost">返回选关</button>
       </div>
     `;
     this.completeTitle = this.completeOverlay.querySelector('.complete-title') as HTMLDivElement;
+    this.completeDescription = this.completeOverlay.querySelector('.complete-desc') as HTMLDivElement;
     this.nextLevelButton = this.completeOverlay.querySelector(
       '[data-action="next-level"]'
     ) as HTMLButtonElement;
@@ -111,32 +126,32 @@ export class GameUI {
     this.settingsPanel = document.createElement('div');
     this.settingsPanel.className = 'panel settings-panel hidden';
     this.settingsPanel.innerHTML = `
-      <h2>Settings</h2>
+      <h2>设置</h2>
       <label>
-        Master Volume
+        主音量
         <input data-setting="masterVolume" type="range" min="0" max="1" step="0.01" />
       </label>
       <label>
-        Music Volume
+        音乐音量
         <input data-setting="musicVolume" type="range" min="0" max="1" step="0.01" />
       </label>
       <label>
-        SFX Volume
+        音效音量
         <input data-setting="sfxVolume" type="range" min="0" max="1" step="0.01" />
       </label>
       <label class="checkbox">
         <input data-setting="reducedMotion" type="checkbox" />
-        Reduced Motion
+        低动态效果
       </label>
       <label>
-        Language
+        语言
         <select data-setting="language">
           <option value="zh-CN">简体中文</option>
-          <option value="en">English</option>
+          <option value="en">英语（开发中）</option>
         </select>
       </label>
       <div class="button-row">
-        <button data-action="close-settings">Close</button>
+        <button data-action="close-settings">完成</button>
       </div>
     `;
 
@@ -166,6 +181,7 @@ export class GameUI {
     this.hud.classList.add('hidden');
     this.pauseOverlay.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
+    this.settingsPanel.classList.add('hidden');
     this.hideHint();
   }
 
@@ -177,14 +193,22 @@ export class GameUI {
 
     this.levelGrid.replaceChildren();
 
-    for (const level of levels) {
+    this.levelSummary.textContent = `已解锁 ${unlocked.size}/${levels.length} · 已通关 ${completed.size}/${levels.length}`;
+
+    for (const [index, level] of levels.entries()) {
       const button = document.createElement('button');
       const open = unlocked.has(level.id);
-      button.className = `level-card ${open ? 'open' : 'locked'}`;
+      const done = completed.has(level.id);
+      button.className = `level-card ${open ? 'open' : 'locked'} ${done ? 'completed' : ''}`;
       button.disabled = !open;
 
-      const done = completed.has(level.id) ? ' ✓' : '';
-      button.innerHTML = `<strong>${level.title}${done}</strong><span>${level.description}</span>`;
+      const status = !open ? '未解锁' : done ? '已通关' : '可挑战';
+      button.innerHTML = `
+        <span class="level-index">第 ${index + 1} 关</span>
+        <strong>${level.title}</strong>
+        <span class="level-desc">${level.description}</span>
+        <span class="level-status">${status}</span>
+      `;
 
       if (open) {
         button.addEventListener('click', () => this.handlers.onSelectLevel(level.id));
@@ -201,20 +225,24 @@ export class GameUI {
     this.pauseOverlay.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
     this.hudTitle.textContent = levelTitle;
+    this.hudSubtitle.textContent = '目标：抵达终点环，必要时切换机关状态';
     this.setPaused(false);
   }
 
   setPaused(paused: boolean): void {
     this.pauseOverlay.classList.toggle('hidden', !paused);
     const pauseButton = this.hud.querySelector('[data-action="pause"]') as HTMLButtonElement;
-    pauseButton.textContent = paused ? 'Resume' : 'Pause';
+    pauseButton.textContent = paused ? '继续' : '暂停';
   }
 
   showCompletion(levelTitle: string, hasNext: boolean): void {
-    this.completeTitle.textContent = levelTitle;
+    this.completeTitle.textContent = `「${levelTitle}」完成`;
+    this.completeDescription.textContent = hasNext
+      ? '路径已记录，下一关已解锁。'
+      : '你已完成本章全部关卡。';
     this.completeOverlay.classList.remove('hidden');
     this.nextLevelButton.disabled = !hasNext;
-    this.nextLevelButton.textContent = hasNext ? 'Next Level' : 'Chapter Complete';
+    this.nextLevelButton.textContent = hasNext ? '进入下一关' : '本章完成';
   }
 
   hideCompletion(): void {

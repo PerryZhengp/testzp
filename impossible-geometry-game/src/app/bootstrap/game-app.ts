@@ -215,7 +215,7 @@ export class GameApp {
     if (!path || path.length <= 0) {
       this.audioService.ping('error');
       this.sceneManager.flashInvalidNode(targetNodeId);
-      this.ui.notify('Path blocked');
+      this.ui.notify('当前路径未连通');
       return;
     }
 
@@ -334,7 +334,7 @@ export class GameApp {
     this.input.setEnabled(true);
     this.ui.setPaused(false);
     this.ui.hideCompletion();
-    this.ui.notify('Level reset');
+    this.ui.notify('本关已重置');
     this.resetStallTimer();
   }
 
