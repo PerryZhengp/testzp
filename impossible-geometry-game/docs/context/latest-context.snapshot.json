@@ -1,37 +1,91 @@
 {
-  "createdAt": "2026-03-21T10:08:59.560Z",
+  "createdAt": "2026-03-21T14:05:10.309Z",
   "summary": {
     "chapterCount": 1,
-    "levelCount": 3,
-    "interactableCount": 4
+    "levelCount": 8,
+    "interactableCount": 25
   },
   "levels": [
     {
       "id": "chapter1-level1",
-      "title": "L1 · First Steps",
+      "title": "第一关·初见回廊",
       "mechanics": [],
       "spawnNodeId": "n0",
-      "goalNodeId": "n3"
+      "goalNodeId": "n5"
     },
     {
       "id": "chapter1-level2",
-      "title": "L2 · Turning Tower",
+      "title": "第二关·旋塔分岔",
       "mechanics": [
         "rotate"
       ],
       "spawnNodeId": "n0",
-      "goalNodeId": "n3"
+      "goalNodeId": "n5"
     },
     {
       "id": "chapter1-level3",
-      "title": "L3 · Sliding Mirage",
+      "title": "第三关·镜桥试炼",
       "mechanics": [
         "slide",
         "lift",
         "rotate"
       ],
       "spawnNodeId": "n0",
-      "goalNodeId": "n4"
+      "goalNodeId": "n6"
+    },
+    {
+      "id": "chapter1-level4",
+      "title": "第四关·双塔并轨",
+      "mechanics": [
+        "rotate",
+        "slide"
+      ],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n6"
+    },
+    {
+      "id": "chapter1-level5",
+      "title": "第五关·错层回廊",
+      "mechanics": [
+        "lift",
+        "slide",
+        "rotate"
+      ],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n7"
+    },
+    {
+      "id": "chapter1-level6",
+      "title": "第六关·三相棱镜",
+      "mechanics": [
+        "rotate",
+        "lift",
+        "slide"
+      ],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n6"
+    },
+    {
+      "id": "chapter1-level7",
+      "title": "第七关·逆向校准",
+      "mechanics": [
+        "rotate",
+        "slide",
+        "lift"
+      ],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n7"
+    },
+    {
+      "id": "chapter1-level8",
+      "title": "第八关·天穹终局",
+      "mechanics": [
+        "rotate",
+        "slide",
+        "lift"
+      ],
+      "spawnNodeId": "n0",
+      "goalNodeId": "n9"
     }
   ],
   "publicInterfaces": [
