@@ -4,7 +4,7 @@ import type {
   LevelDef,
   SaveDataV1
 } from '../../shared/types/game';
-import { orderedLevels } from '../../content/levels';
+import { verticalSliceLevels } from '../../content/levels';
 import { AnimationController } from '../../engine/animation/animation-controller';
 import { AudioService } from '../../engine/audio/audio-service';
 import { InputManager } from '../../engine/input/input-manager';
@@ -109,7 +109,7 @@ export class GameApp {
       }
     );
 
-    this.saveService = new SaveService(orderedLevels[0].id);
+    this.saveService = new SaveService(verticalSliceLevels[0].id);
     this.saveData = this.saveService.load();
     this.ui.updateSettings(this.saveData.settings);
 
@@ -186,7 +186,7 @@ export class GameApp {
     this.ui.hideCompletion();
     this.ui.hideHint();
     this.ui.showLevelSelect(
-      orderedLevels,
+      verticalSliceLevels,
       new Set(this.saveData.unlockedLevelIds),
       new Set(this.saveData.completedLevelIds)
     );
@@ -436,12 +436,12 @@ export class GameApp {
   }
 
   private getNextLevel(currentLevelId: string): LevelDef | undefined {
-    const index = orderedLevels.findIndex((level) => level.id === currentLevelId);
-    if (index < 0 || index + 1 >= orderedLevels.length) {
+    const index = verticalSliceLevels.findIndex((level) => level.id === currentLevelId);
+    if (index < 0 || index + 1 >= verticalSliceLevels.length) {
       return undefined;
     }
 
-    return orderedLevels[index + 1];
+    return verticalSliceLevels[index + 1];
   }
 
   private syncControlPanels(): void {

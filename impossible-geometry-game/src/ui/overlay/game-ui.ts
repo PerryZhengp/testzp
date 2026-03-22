@@ -296,7 +296,9 @@ export class GameUI {
     this.completeOverlay.classList.add('hidden');
 
     this.levelList.replaceChildren();
-    this.levelSummary.textContent = `已解锁 ${unlocked.size}/${levels.length} · 已完成 ${completed.size}/${levels.length}`;
+    const unlockedCount = levels.filter((level) => unlocked.has(level.id)).length;
+    const completedCount = levels.filter((level) => completed.has(level.id)).length;
+    this.levelSummary.textContent = `已解锁 ${unlockedCount}/${levels.length} · 已完成 ${completedCount}/${levels.length}`;
 
     for (const [index, level] of levels.entries()) {
       const row = document.createElement('button');

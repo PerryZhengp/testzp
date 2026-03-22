@@ -10,6 +10,8 @@ import { level8 } from './level-8';
 
 export const orderedLevels: LevelDef[] = [level1, level2, level3, level4, level5, level6, level7, level8];
 
+export const verticalSliceLevels: LevelDef[] = [level1];
+
 export const levelsById: Record<string, LevelDef> = Object.fromEntries(
   orderedLevels.map((level) => [level.id, level])
 );
