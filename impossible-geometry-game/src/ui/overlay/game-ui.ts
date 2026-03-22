@@ -26,6 +26,10 @@ export interface GameUIHandlers {
   onMoveNodePanel: (nodeId: string) => void;
 }
 
+export interface GameUIOptions {
+  debugMode?: boolean;
+}
+
 export class GameUI {
   private readonly shell: HTMLDivElement;
 
@@ -35,25 +39,31 @@ export class GameUI {
 
   private readonly levelSummary: HTMLDivElement;
 
-  private readonly levelGrid: HTMLDivElement;
+  private readonly levelList: HTMLDivElement;
 
   private readonly hud: HTMLDivElement;
 
   private readonly hudTitle: HTMLDivElement;
 
-  private readonly hudSubtitle: HTMLDivElement;
+  private readonly restartDock: HTMLDivElement;
 
-  private readonly controlDeck: HTMLDivElement;
+  private readonly controlDock: HTMLDivElement;
 
   private readonly nodeList: HTMLDivElement;
 
   private readonly nodeEmpty: HTMLDivElement;
 
+  private readonly nodeCount: HTMLDivElement;
+
   private readonly interactableList: HTMLDivElement;
 
   private readonly interactableEmpty: HTMLDivElement;
 
-  private readonly pauseOverlay: HTMLDivElement;
+  private readonly interactableCount: HTMLDivElement;
+
+  private readonly pauseScrim: HTMLDivElement;
+
+  private readonly pauseDrawer: HTMLDivElement;
 
   private readonly completeOverlay: HTMLDivElement;
 
@@ -69,6 +79,8 @@ export class GameUI {
 
   private readonly toast: HTMLDivElement;
 
+  private readonly debugMode: boolean;
+
   private interactableEnabled = true;
 
   private nodeEnabled = true;
@@ -77,99 +89,116 @@ export class GameUI {
 
   private readonly interactableButtons = new Map<string, HTMLButtonElement>();
 
-  constructor(container: HTMLElement, private readonly handlers: GameUIHandlers) {
+  constructor(container: HTMLElement, private readonly handlers: GameUIHandlers, options?: GameUIOptions) {
+    this.debugMode = Boolean(options?.debugMode);
     this.shell = document.createElement('div');
     this.shell.className = 'ui-shell';
 
     this.mainMenu = document.createElement('div');
-    this.mainMenu.className = 'panel main-menu';
+    this.mainMenu.className = 'landing-screen';
     this.mainMenu.innerHTML = `
-      <div class="menu-kicker">UNFOLD THE IMPOSSIBLE</div>
-      <h1>不可能几何</h1>
-      <p>把空间当作机关来调度。你不只是解谜者，也是建筑系统的操控者。</p>
-      <div class="button-row">
-        <button data-action="start">开始旅程</button>
-        <button data-action="settings" class="ghost">系统设置</button>
+      <div class="landing-aura" aria-hidden="true"></div>
+      <div class="landing-showcase" aria-hidden="true">
+        <img src="/landing-cover.svg" alt="" />
       </div>
-      <div class="menu-footnote">新交互：关内可直接在“机关控制台”切换机关状态。</div>
+      <div class="landing-project">Echoes of Geometry</div>
+      <div class="landing-content">
+        <h1>看见本不该存在的路</h1>
+        <p>一款安静、克制的浏览器建筑解谜作品。</p>
+      </div>
+      <div class="landing-actions">
+        <button data-action="start">开始旅程</button>
+        <button data-action="level-select" class="ghost">选关目录</button>
+      </div>
     `;
 
     this.levelSelect = document.createElement('div');
-    this.levelSelect.className = 'panel level-select hidden';
+    this.levelSelect.className = 'level-select-screen hidden';
     this.levelSelect.innerHTML = `
-      <h2>第一章：浮空观象台</h2>
-      <p>建议按顺序挑战。后段关卡需要中途改态与多机关联动。</p>
-      <div class="level-select-meta"></div>
-      <div class="level-grid"></div>
+      <div class="catalog-frame">
+        <aside class="catalog-chapters">
+          <div class="section-title">Chapters</div>
+          <button class="chapter-row active" type="button" disabled>Chapter 01 · 浮空观象台</button>
+          <button class="chapter-row" type="button" disabled>Chapter 02 · 开发中</button>
+          <button class="chapter-row" type="button" disabled>Chapter 03 · 开发中</button>
+        </aside>
+        <section class="catalog-levels">
+          <div class="catalog-head">
+            <div class="section-title">Levels</div>
+            <div class="level-select-meta"></div>
+          </div>
+          <div class="level-list"></div>
+        </section>
+      </div>
       <div class="button-row">
-        <button data-action="back-main" class="ghost">返回主菜单</button>
+        <button data-action="back-main" class="ghost">返回首页</button>
       </div>
     `;
     this.levelSummary = this.levelSelect.querySelector('.level-select-meta') as HTMLDivElement;
-    this.levelGrid = this.levelSelect.querySelector('.level-grid') as HTMLDivElement;
+    this.levelList = this.levelSelect.querySelector('.level-list') as HTMLDivElement;
 
     this.hud = document.createElement('div');
     this.hud.className = 'hud hidden';
     this.hud.innerHTML = `
-      <div class="hud-left">
-        <div class="hud-title">-</div>
-        <div class="hud-subtitle">目标：抵达终点环，必要时在控制台中途改态</div>
-      </div>
-      <div class="hud-right">
-        <button data-action="pause">暂停</button>
-        <button data-action="reset" class="ghost">重置本关</button>
-        <button data-action="back-levels" class="ghost">返回选关</button>
-        <button data-action="settings" class="ghost">设置</button>
-      </div>
+      <div class="hud-title">Chapter 01 / -</div>
+      <button data-action="pause" class="ghost">暂停</button>
     `;
     this.hudTitle = this.hud.querySelector('.hud-title') as HTMLDivElement;
-    this.hudSubtitle = this.hud.querySelector('.hud-subtitle') as HTMLDivElement;
 
-    this.controlDeck = document.createElement('div');
-    this.controlDeck.className = 'control-deck hidden';
-    this.controlDeck.innerHTML = `
-      <div class="control-deck-head">
-        <div class="control-title">机关控制台</div>
-        <div class="control-tip">所有可点击项都在这里</div>
-      </div>
-      <div class="control-grid">
-        <section class="control-block">
-          <div class="block-title">可前往节点</div>
-          <div class="node-list"></div>
-          <div class="node-empty">暂无可达节点</div>
-        </section>
-        <section class="control-block">
-          <div class="block-title">机关状态</div>
-          <div class="interactable-list"></div>
-          <div class="interactable-empty">本关无机关，专注路径观察即可。</div>
-        </section>
-      </div>
+    this.restartDock = document.createElement('div');
+    this.restartDock.className = 'hud-restart hidden';
+    this.restartDock.innerHTML = '<button data-action="reset" class="ghost">重置本关</button>';
+
+    this.controlDock = document.createElement('div');
+    this.controlDock.className = 'control-dock hidden';
+    this.controlDock.innerHTML = `
+      <div class="control-caption">可操作索引</div>
+      <section class="control-group">
+        <div class="control-group-head">
+          <div class="group-title">可前往节点</div>
+          <div class="group-count node-count">0</div>
+        </div>
+        <div class="node-list"></div>
+        <div class="node-empty">暂无可达节点</div>
+      </section>
+      <section class="control-group">
+        <div class="control-group-head">
+          <div class="group-title">机关状态</div>
+          <div class="group-count interactable-count">0</div>
+        </div>
+        <div class="interactable-list"></div>
+        <div class="interactable-empty">本关无机关</div>
+      </section>
     `;
-    this.nodeList = this.controlDeck.querySelector('.node-list') as HTMLDivElement;
-    this.nodeEmpty = this.controlDeck.querySelector('.node-empty') as HTMLDivElement;
-    this.interactableList = this.controlDeck.querySelector('.interactable-list') as HTMLDivElement;
-    this.interactableEmpty = this.controlDeck.querySelector('.interactable-empty') as HTMLDivElement;
+    this.nodeList = this.controlDock.querySelector('.node-list') as HTMLDivElement;
+    this.nodeEmpty = this.controlDock.querySelector('.node-empty') as HTMLDivElement;
+    this.nodeCount = this.controlDock.querySelector('.node-count') as HTMLDivElement;
+    this.interactableList = this.controlDock.querySelector('.interactable-list') as HTMLDivElement;
+    this.interactableEmpty = this.controlDock.querySelector('.interactable-empty') as HTMLDivElement;
+    this.interactableCount = this.controlDock.querySelector('.interactable-count') as HTMLDivElement;
 
-    this.pauseOverlay = document.createElement('div');
-    this.pauseOverlay.className = 'panel pause-overlay hidden';
-    this.pauseOverlay.innerHTML = `
-      <h2>挑战已暂停</h2>
-      <p>可以继续当前推演，或回到起点重新规划。</p>
-      <div class="button-row">
-        <button data-action="resume">继续挑战</button>
-        <button data-action="reset" class="ghost">重置本关</button>
-        <button data-action="back-levels" class="ghost">回到选关</button>
-      </div>
+    this.pauseScrim = document.createElement('div');
+    this.pauseScrim.className = 'pause-scrim hidden';
+
+    this.pauseDrawer = document.createElement('div');
+    this.pauseDrawer.className = 'pause-drawer hidden';
+    this.pauseDrawer.innerHTML = `
+      <h2>暂停</h2>
+      <button data-action="resume" class="text-action">继续</button>
+      <button data-action="reset" class="text-action">重置本关</button>
+      <button data-action="back-levels" class="text-action">返回选关</button>
+      <button data-action="settings" class="text-action">设置</button>
+      <button data-action="back-main" class="text-action">退出到首页</button>
     `;
 
     this.completeOverlay = document.createElement('div');
-    this.completeOverlay.className = 'panel complete-overlay hidden';
+    this.completeOverlay.className = 'complete-screen hidden';
     this.completeOverlay.innerHTML = `
-      <h2>关卡完成</h2>
+      <h2>Completed</h2>
       <div class="complete-title"></div>
       <div class="complete-desc"></div>
       <div class="button-row">
-        <button data-action="next-level">进入下一关</button>
+        <button data-action="next-level">下一关</button>
         <button data-action="back-levels" class="ghost">返回选关</button>
       </div>
     `;
@@ -180,34 +209,44 @@ export class GameUI {
     ) as HTMLButtonElement;
 
     this.settingsPanel = document.createElement('div');
-    this.settingsPanel.className = 'panel settings-panel hidden';
+    this.settingsPanel.className = 'settings-screen hidden';
     this.settingsPanel.innerHTML = `
-      <h2>设置</h2>
-      <label>
-        主音量
-        <input data-setting="masterVolume" type="range" min="0" max="1" step="0.01" />
-      </label>
-      <label>
-        音乐音量
-        <input data-setting="musicVolume" type="range" min="0" max="1" step="0.01" />
-      </label>
-      <label>
-        音效音量
-        <input data-setting="sfxVolume" type="range" min="0" max="1" step="0.01" />
-      </label>
-      <label class="checkbox">
-        <input data-setting="reducedMotion" type="checkbox" />
-        低动态效果
-      </label>
-      <label>
-        语言
-        <select data-setting="language">
-          <option value="zh-CN">简体中文</option>
-          <option value="en">英语（开发中）</option>
-        </select>
-      </label>
-      <div class="button-row">
-        <button data-action="close-settings">完成</button>
+      <div class="settings-shell">
+        <aside class="settings-nav">
+          <h2>Settings</h2>
+          <button type="button" class="settings-nav-item active" disabled>Audio</button>
+          <button type="button" class="settings-nav-item" disabled>Display</button>
+          <button type="button" class="settings-nav-item" disabled>Accessibility</button>
+          <button type="button" class="settings-nav-item" disabled>Language</button>
+        </aside>
+        <section class="settings-controls">
+          <label>
+            主音量
+            <input data-setting="masterVolume" type="range" min="0" max="1" step="0.01" />
+          </label>
+          <label>
+            音乐音量
+            <input data-setting="musicVolume" type="range" min="0" max="1" step="0.01" />
+          </label>
+          <label>
+            音效音量
+            <input data-setting="sfxVolume" type="range" min="0" max="1" step="0.01" />
+          </label>
+          <label class="checkbox-row">
+            <span>低动态效果</span>
+            <input data-setting="reducedMotion" type="checkbox" />
+          </label>
+          <label>
+            语言
+            <select data-setting="language">
+              <option value="zh-CN">简体中文</option>
+              <option value="en">English</option>
+            </select>
+          </label>
+          <div class="button-row">
+            <button data-action="close-settings">完成</button>
+          </div>
+        </section>
       </div>
     `;
 
@@ -221,8 +260,10 @@ export class GameUI {
       this.mainMenu,
       this.levelSelect,
       this.hud,
-      this.controlDeck,
-      this.pauseOverlay,
+      this.restartDock,
+      this.controlDock,
+      this.pauseScrim,
+      this.pauseDrawer,
       this.completeOverlay,
       this.settingsPanel,
       this.hintBubble,
@@ -236,8 +277,10 @@ export class GameUI {
   showMainMenu(): void {
     this.showOnly(this.mainMenu);
     this.hud.classList.add('hidden');
-    this.controlDeck.classList.add('hidden');
-    this.pauseOverlay.classList.add('hidden');
+    this.restartDock.classList.add('hidden');
+    this.controlDock.classList.add('hidden');
+    this.pauseScrim.classList.add('hidden');
+    this.pauseDrawer.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
     this.settingsPanel.classList.add('hidden');
     this.hideHint();
@@ -246,34 +289,34 @@ export class GameUI {
   showLevelSelect(levels: LevelDef[], unlocked: Set<string>, completed: Set<string>): void {
     this.showOnly(this.levelSelect);
     this.hud.classList.add('hidden');
-    this.controlDeck.classList.add('hidden');
-    this.pauseOverlay.classList.add('hidden');
+    this.restartDock.classList.add('hidden');
+    this.controlDock.classList.add('hidden');
+    this.pauseScrim.classList.add('hidden');
+    this.pauseDrawer.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
 
-    this.levelGrid.replaceChildren();
-
-    this.levelSummary.textContent = `已解锁 ${unlocked.size}/${levels.length} · 已通关 ${completed.size}/${levels.length}`;
+    this.levelList.replaceChildren();
+    this.levelSummary.textContent = `已解锁 ${unlocked.size}/${levels.length} · 已完成 ${completed.size}/${levels.length}`;
 
     for (const [index, level] of levels.entries()) {
-      const button = document.createElement('button');
+      const row = document.createElement('button');
       const open = unlocked.has(level.id);
       const done = completed.has(level.id);
-      button.className = `level-card ${open ? 'open' : 'locked'} ${done ? 'completed' : ''}`;
-      button.disabled = !open;
+      const status = !open ? '未解锁' : done ? '已完成' : '可进入';
 
-      const status = !open ? '未解锁' : done ? '已通关' : '可挑战';
-      button.innerHTML = `
-        <span class="level-index">第 ${index + 1} 关</span>
-        <strong>${level.title}</strong>
-        <span class="level-desc">${level.description}</span>
-        <span class="level-status">${status}</span>
+      row.className = `level-row ${open ? 'open' : 'locked'} ${done ? 'done' : ''}`;
+      row.disabled = !open;
+      row.innerHTML = `
+        <span class="row-index">${String(index + 1).padStart(2, '0')}</span>
+        <span class="row-title">${level.title}</span>
+        <span class="row-state">${status}</span>
       `;
 
       if (open) {
-        button.addEventListener('click', () => this.handlers.onSelectLevel(level.id));
+        row.addEventListener('click', () => this.handlers.onSelectLevel(level.id));
       }
 
-      this.levelGrid.append(button);
+      this.levelList.append(row);
     }
   }
 
@@ -281,29 +324,29 @@ export class GameUI {
     this.mainMenu.classList.add('hidden');
     this.levelSelect.classList.add('hidden');
     this.hud.classList.remove('hidden');
-    this.controlDeck.classList.remove('hidden');
-    this.pauseOverlay.classList.add('hidden');
+    this.restartDock.classList.remove('hidden');
+    this.controlDock.classList.toggle('hidden', !this.debugMode);
+    this.pauseScrim.classList.add('hidden');
+    this.pauseDrawer.classList.add('hidden');
     this.completeOverlay.classList.add('hidden');
-    this.hudTitle.textContent = levelTitle;
-    this.hudSubtitle.textContent = '目标：抵达终点环，必要时在控制台中途改态';
+    this.hudTitle.textContent = `Chapter 01 / ${levelTitle}`;
     this.setPaused(false);
   }
 
   setPaused(paused: boolean): void {
-    this.pauseOverlay.classList.toggle('hidden', !paused);
-    this.controlDeck.classList.toggle('is-paused', paused);
+    this.pauseScrim.classList.toggle('hidden', !paused);
+    this.pauseDrawer.classList.toggle('hidden', !paused);
+    this.controlDock.classList.toggle('is-paused', paused && this.debugMode);
     const pauseButton = this.hud.querySelector('[data-action="pause"]') as HTMLButtonElement;
     pauseButton.textContent = paused ? '继续' : '暂停';
   }
 
   showCompletion(levelTitle: string, hasNext: boolean): void {
-    this.completeTitle.textContent = `「${levelTitle}」完成`;
-    this.completeDescription.textContent = hasNext
-      ? '路径已记录，下一关已解锁。'
-      : '你已完成本章全部关卡。';
+    this.completeTitle.textContent = levelTitle;
+    this.completeDescription.textContent = hasNext ? '下一关已解锁。' : '你已完成第一章。';
     this.completeOverlay.classList.remove('hidden');
     this.nextLevelButton.disabled = !hasNext;
-    this.nextLevelButton.textContent = hasNext ? '进入下一关' : '本章完成';
+    this.nextLevelButton.textContent = hasNext ? '下一关' : '已是最终关';
   }
 
   hideCompletion(): void {
@@ -313,6 +356,7 @@ export class GameUI {
   updateReachableNodes(items: ReachableNodeItem[]): void {
     this.nodeButtons.clear();
     this.nodeList.replaceChildren();
+    this.nodeCount.textContent = String(items.length);
 
     const hasItems = items.length > 0;
     this.nodeList.classList.toggle('hidden', !hasItems);
@@ -324,9 +368,12 @@ export class GameUI {
 
     for (const item of items) {
       const button = document.createElement('button');
-      button.className = 'node-chip';
+      button.className = 'dock-row node-row';
       button.dataset.nodeId = item.id;
-      button.textContent = item.label;
+      button.innerHTML = `
+        <span class="dock-main">${item.label}</span>
+        <span class="dock-meta">前往</span>
+      `;
       button.disabled = !this.nodeEnabled;
       this.nodeButtons.set(item.id, button);
       this.nodeList.append(button);
@@ -343,6 +390,7 @@ export class GameUI {
   updateInteractables(items: InteractablePanelItem[]): void {
     this.interactableButtons.clear();
     this.interactableList.replaceChildren();
+    this.interactableCount.textContent = String(items.length);
 
     const hasItems = items.length > 0;
     this.interactableList.classList.toggle('hidden', !hasItems);
@@ -354,11 +402,11 @@ export class GameUI {
 
     for (const item of items) {
       const button = document.createElement('button');
-      button.className = 'interactable-chip';
+      button.className = 'dock-row interactable-row';
       button.dataset.interactableId = item.id;
       button.innerHTML = `
-        <span class="chip-name">${item.name}</span>
-        <span class="chip-value">${item.valueLabel}</span>
+        <span class="dock-main">${item.name}</span>
+        <span class="dock-value">${item.valueLabel}</span>
       `;
       button.disabled = !this.interactableEnabled;
       this.interactableButtons.set(item.id, button);
@@ -408,7 +456,7 @@ export class GameUI {
 
     setTimeout(() => {
       this.toast.classList.add('hidden');
-    }, 1500);
+    }, 1600);
   }
 
   private showOnly(screen: HTMLElement): void {
@@ -440,8 +488,8 @@ export class GameUI {
       this.handlers.onStartJourney();
     });
 
-    this.mainMenu.querySelector('[data-action="settings"]')?.addEventListener('click', () => {
-      this.handlers.onOpenSettings();
+    this.mainMenu.querySelector('[data-action="level-select"]')?.addEventListener('click', () => {
+      this.handlers.onStartJourney();
     });
 
     this.levelSelect.querySelector('[data-action="back-main"]')?.addEventListener('click', () => {
@@ -452,28 +500,32 @@ export class GameUI {
       this.handlers.onTogglePause();
     });
 
-    this.hud.querySelector('[data-action="reset"]')?.addEventListener('click', () => {
+    this.restartDock.querySelector('[data-action="reset"]')?.addEventListener('click', () => {
       this.handlers.onResetLevel();
     });
 
-    this.hud.querySelector('[data-action="back-levels"]')?.addEventListener('click', () => {
-      this.handlers.onBackToLevelSelect();
-    });
-
-    this.hud.querySelector('[data-action="settings"]')?.addEventListener('click', () => {
-      this.handlers.onOpenSettings();
-    });
-
-    this.pauseOverlay.querySelector('[data-action="resume"]')?.addEventListener('click', () => {
+    this.pauseDrawer.querySelector('[data-action="resume"]')?.addEventListener('click', () => {
       this.handlers.onTogglePause();
     });
 
-    this.pauseOverlay.querySelector('[data-action="reset"]')?.addEventListener('click', () => {
+    this.pauseDrawer.querySelector('[data-action="reset"]')?.addEventListener('click', () => {
       this.handlers.onResetLevel();
     });
 
-    this.pauseOverlay.querySelector('[data-action="back-levels"]')?.addEventListener('click', () => {
+    this.pauseDrawer.querySelector('[data-action="back-levels"]')?.addEventListener('click', () => {
       this.handlers.onBackToLevelSelect();
+    });
+
+    this.pauseDrawer.querySelector('[data-action="settings"]')?.addEventListener('click', () => {
+      this.handlers.onOpenSettings();
+    });
+
+    this.pauseDrawer.querySelector('[data-action="back-main"]')?.addEventListener('click', () => {
+      this.handlers.onBackToMainMenu();
+    });
+
+    this.pauseScrim.addEventListener('click', () => {
+      this.handlers.onTogglePause();
     });
 
     this.completeOverlay

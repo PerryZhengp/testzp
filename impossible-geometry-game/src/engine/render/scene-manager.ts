@@ -1,21 +1,15 @@
 import {
   AmbientLight,
-  CanvasTexture,
   BoxGeometry,
-  CircleGeometry,
   Color,
+  ConeGeometry,
   CylinderGeometry,
   DirectionalLight,
   Group,
-  Line,
-  LineBasicMaterial,
-  BufferGeometry,
   Mesh,
   MeshStandardMaterial,
   OrthographicCamera,
   Scene,
-  Sprite,
-  SpriteMaterial,
   SphereGeometry,
   TorusGeometry,
   Vector3,
@@ -23,7 +17,7 @@ import {
   Object3D
 } from 'three';
 import { CameraController } from '../camera/camera-controller';
-import type { LevelDef, Scalar, WalkGraph } from '../../shared/types/game';
+import type { LevelDef, Scalar, Vec3, WalkGraph } from '../../shared/types/game';
 import { scalarKey } from '../../shared/utils/math';
 
 interface LevelRuntimeLike {
@@ -34,52 +28,8 @@ interface LevelRuntimeLike {
   interactableValues: Record<string, Scalar>;
 }
 
-function createLabelSprite(text: string, color = '#d8edff'): Sprite {
-  const canvas = document.createElement('canvas');
-  canvas.width = 512;
-  canvas.height = 128;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) {
-    return new Sprite();
-  }
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'rgba(8, 20, 39, 0.74)';
-  ctx.strokeStyle = 'rgba(189, 225, 255, 0.66)';
-  ctx.lineWidth = 4;
-  ctx.beginPath();
-  const radius = 20;
-  ctx.moveTo(radius, 6);
-  ctx.lineTo(canvas.width - radius, 6);
-  ctx.quadraticCurveTo(canvas.width - 6, 6, canvas.width - 6, radius);
-  ctx.lineTo(canvas.width - 6, canvas.height - radius);
-  ctx.quadraticCurveTo(canvas.width - 6, canvas.height - 6, canvas.width - radius, canvas.height - 6);
-  ctx.lineTo(radius, canvas.height - 6);
-  ctx.quadraticCurveTo(6, canvas.height - 6, 6, canvas.height - radius);
-  ctx.lineTo(6, radius);
-  ctx.quadraticCurveTo(6, 6, radius, 6);
-  ctx.closePath();
-  ctx.fill();
-  ctx.stroke();
-
-  ctx.fillStyle = color;
-  ctx.font = '600 42px PingFang SC, Noto Sans SC, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-
-  const texture = new CanvasTexture(canvas);
-  texture.needsUpdate = true;
-
-  const material = new SpriteMaterial({
-    map: texture,
-    transparent: true,
-    depthTest: false
-  });
-
-  const sprite = new Sprite(material);
-  sprite.scale.set(1.8, 0.45, 1);
-  return sprite;
+interface SceneManagerOptions {
+  reserveSideDock?: boolean;
 }
 
 export class SceneManager {
@@ -101,7 +51,7 @@ export class SceneManager {
 
   private readonly pickables: Object3D[] = [];
 
-  private readonly playerMesh: Mesh;
+  private readonly playerMesh: Group;
 
   private readonly goalMarker = new Group();
 
@@ -109,12 +59,13 @@ export class SceneManager {
 
   private webglAvailable = true;
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, options?: SceneManagerOptions) {
     this.container = container;
     this.scene = new Scene();
-    this.scene.background = new Color('#0b1028');
+    this.scene.background = new Color('#d9e8ef');
 
     this.cameraController = new CameraController();
+    this.cameraController.setSideDockReserved(Boolean(options?.reserveSideDock));
 
     this.renderer = this.createRendererSafely();
 
@@ -123,25 +74,16 @@ export class SceneManager {
     this.scene.add(this.worldGroup);
     this.scene.add(this.edgeGroup);
 
-    const ambient = new AmbientLight('#dfe8ff', 0.8);
-    const keyLight = new DirectionalLight('#f5f8ff', 1.1);
+    const ambient = new AmbientLight('#f3f7ff', 0.86);
+    const keyLight = new DirectionalLight('#fff9ef', 1.05);
     keyLight.position.set(10, 20, 10);
-    const rimLight = new DirectionalLight('#7ac8ff', 0.45);
+    const rimLight = new DirectionalLight('#8fc3d1', 0.5);
     rimLight.position.set(-14, 12, -8);
 
     this.scene.add(ambient, keyLight, rimLight);
 
-    this.playerMesh = new Mesh(
-      new SphereGeometry(0.23, 20, 20),
-      new MeshStandardMaterial({
-        color: '#ffe196',
-        emissive: '#ffd778',
-        emissiveIntensity: 0.32,
-        metalness: 0.1,
-        roughness: 0.45
-      })
-    );
-    this.playerMesh.position.set(0, 0.4, 0);
+    this.playerMesh = this.createPlayerAvatar();
+    this.playerMesh.position.set(0, 0.11, 0);
     this.scene.add(this.playerMesh);
 
     this.resize();
@@ -166,8 +108,8 @@ export class SceneManager {
     this.cameraController.resize(width, height);
   }
 
-  applyLevelCamera(level: LevelDef): void {
-    this.cameraController.applyLevelCamera(level.camera);
+  applyLevelCamera(level: LevelDef, fitPoints?: Vec3[]): void {
+    this.cameraController.applyLevelCamera(level.camera, fitPoints);
   }
 
   loadLevel(runtime: LevelRuntimeLike): void {
@@ -180,15 +122,15 @@ export class SceneManager {
       this.worldGroup.add(group);
     }
 
-    const nodeGeometry = new CircleGeometry(0.32, 24);
+    const nodeGeometry = new BoxGeometry(0.58, 0.07, 0.58);
+    const nodeTopGeometry = new BoxGeometry(0.31, 0.045, 0.31);
     const nodeMaterial = new MeshStandardMaterial({
-      color: '#7fa8ff',
-      emissive: '#6f9bff',
-      emissiveIntensity: 0.24,
-      roughness: 0.4,
-      metalness: 0.06
+      color: '#8ba3ba',
+      emissive: '#6e8192',
+      emissiveIntensity: 0.18,
+      roughness: 0.62,
+      metalness: 0.04
     });
-    const nodeRingGeometry = new TorusGeometry(0.34, 0.04, 10, 24);
 
     for (const node of runtime.level.nodes) {
       const anchorGroup = this.anchorGroups.get(node.anchorId);
@@ -197,24 +139,22 @@ export class SceneManager {
       }
 
       const mesh = new Mesh(nodeGeometry, nodeMaterial.clone());
-      mesh.position.set(node.localPosition[0], node.localPosition[1] + 0.08, node.localPosition[2]);
-      mesh.rotation.x = -Math.PI / 2;
+      mesh.position.set(node.localPosition[0], node.localPosition[1] + 0.035, node.localPosition[2]);
       mesh.userData.pickKind = 'node';
       mesh.userData.pickId = node.id;
 
-      const ring = new Mesh(
-        nodeRingGeometry,
+      const topPlate = new Mesh(
+        nodeTopGeometry,
         new MeshStandardMaterial({
-          color: '#cfe1ff',
-          emissive: '#8cb6ff',
-          emissiveIntensity: 0.22,
-          roughness: 0.26,
-          metalness: 0.14
+          color: '#d9ddd8',
+          emissive: '#c4cbc3',
+          emissiveIntensity: 0.14,
+          roughness: 0.7,
+          metalness: 0.02
         })
       );
-      ring.rotation.x = Math.PI / 2;
-      ring.position.y = 0.05;
-      mesh.add(ring);
+      topPlate.position.y = 0.055;
+      mesh.add(topPlate);
 
       anchorGroup.add(mesh);
       this.nodeMeshes.set(node.id, mesh);
@@ -229,57 +169,116 @@ export class SceneManager {
 
       const baseColor =
         interactable.type === 'rotate'
-          ? '#ff9f67'
+          ? '#a98a62'
           : interactable.type === 'slide'
-            ? '#66d8aa'
-            : '#65c9ff';
+            ? '#7e9a96'
+            : '#8f9076';
       const commonMaterial = new MeshStandardMaterial({
         color: baseColor,
-        emissive: '#152b4e',
-        emissiveIntensity: 0.48,
-        roughness: 0.33,
-        metalness: 0.16
+        emissive: '#45505a',
+        emissiveIntensity: 0.24,
+        roughness: 0.62,
+        metalness: 0.06
+      });
+      const accentMaterial = new MeshStandardMaterial({
+        color: '#ddd6c9',
+        emissive: '#b8afa0',
+        emissiveIntensity: 0.12,
+        roughness: 0.7,
+        metalness: 0.02
       });
 
       let mesh: Mesh;
       if (interactable.type === 'rotate') {
-        mesh = new Mesh(new TorusGeometry(0.28, 0.08, 14, 34), commonMaterial);
-        mesh.rotation.x = Math.PI / 2;
+        const bronzeMaterial = new MeshStandardMaterial({
+          color: '#8f7053',
+          emissive: '#4d3b2a',
+          emissiveIntensity: 0.22,
+          roughness: 0.42,
+          metalness: 0.26
+        });
+        const brassMaterial = new MeshStandardMaterial({
+          color: '#c2a27a',
+          emissive: '#7f6649',
+          emissiveIntensity: 0.18,
+          roughness: 0.36,
+          metalness: 0.34
+        });
+        const ceramicMaterial = new MeshStandardMaterial({
+          color: '#e6dfd2',
+          emissive: '#b8afa0',
+          emissiveIntensity: 0.12,
+          roughness: 0.64,
+          metalness: 0.04
+        });
+        const jewelMaterial = new MeshStandardMaterial({
+          color: '#85bfbe',
+          emissive: '#6ca7a6',
+          emissiveIntensity: 0.3,
+          roughness: 0.22,
+          metalness: 0.16
+        });
+
+        mesh = new Mesh(new CylinderGeometry(0.13, 0.16, 0.22, 18), bronzeMaterial);
+
+        const footing = new Mesh(new CylinderGeometry(0.19, 0.19, 0.06, 24), commonMaterial);
+        footing.position.y = -0.12;
+        const crownRing = new Mesh(new TorusGeometry(0.145, 0.022, 12, 28), brassMaterial);
+        crownRing.rotation.x = Math.PI / 2;
+        crownRing.position.y = 0.06;
+        const topDisk = new Mesh(new CylinderGeometry(0.112, 0.124, 0.065, 24), ceramicMaterial);
+        topDisk.position.y = 0.11;
+        const handleHub = new Mesh(new CylinderGeometry(0.045, 0.045, 0.07, 16), brassMaterial);
+        handleHub.position.y = 0.165;
+        const handleA = new Mesh(new BoxGeometry(0.33, 0.045, 0.085), ceramicMaterial);
+        handleA.position.y = 0.195;
+        const handleB = new Mesh(new BoxGeometry(0.085, 0.045, 0.33), ceramicMaterial);
+        handleB.position.y = 0.195;
+        const jewel = new Mesh(new SphereGeometry(0.03, 14, 14), jewelMaterial);
+        jewel.position.y = 0.245;
+
+        mesh.add(footing, crownRing, topDisk, handleHub, handleA, handleB, jewel);
       } else if (interactable.type === 'slide') {
-        mesh = new Mesh(new BoxGeometry(0.72, 0.2, 0.28), commonMaterial);
+        mesh = new Mesh(new BoxGeometry(0.64, 0.085, 0.19), commonMaterial);
+        const slider = new Mesh(new BoxGeometry(0.15, 0.14, 0.15), accentMaterial);
+        slider.position.set(0.16, 0.12, 0);
+        mesh.add(slider);
       } else {
-        mesh = new Mesh(new CylinderGeometry(0.18, 0.2, 0.62, 14), commonMaterial);
+        mesh = new Mesh(new BoxGeometry(0.42, 0.2, 0.42), commonMaterial);
+        const cap = new Mesh(new BoxGeometry(0.24, 0.065, 0.24), accentMaterial);
+        cap.position.y = 0.145;
+        mesh.add(cap);
       }
 
-      mesh.position.set(0, 0.66 + index * 0.08, 0);
+      mesh.position.set(0, 0.5 + index * 0.07, 0);
       mesh.userData.pickKind = 'interactable';
       mesh.userData.pickId = interactable.id;
       mesh.userData.baseScale = mesh.scale.clone();
 
-      const label = createLabelSprite(interactable.displayName);
-      label.position.set(0, mesh.position.y + 0.45, 0);
-
       anchorGroup.add(mesh);
-      anchorGroup.add(label);
       this.interactableMeshes.set(interactable.id, mesh);
       this.pickables.push(mesh);
     }
 
     this.applyAnchors(runtime.anchors);
     this.updateGraph(runtime.graph);
-    this.updateNodeHighlights(runtime.currentNodeId, runtime.level.goalNodeId);
+    this.updateNodeHighlights(runtime.currentNodeId, runtime.level.goalNodeId, runtime.graph);
     this.updateInteractableVisuals(runtime.level, runtime.interactableValues);
 
     const goalNode = runtime.graph.nodes[runtime.level.goalNodeId];
     this.goalMarker.clear();
     if (goalNode) {
-      const ring = new Mesh(
-        new TorusGeometry(0.46, 0.08, 12, 32),
-        new MeshStandardMaterial({ color: '#f4f6ff', emissive: '#91f2ff', emissiveIntensity: 0.65 })
+      const outer = new Mesh(
+        new BoxGeometry(0.72, 0.07, 0.72),
+        new MeshStandardMaterial({ color: '#d0b788', emissive: '#ae9362', emissiveIntensity: 0.24 })
       );
-      ring.rotation.x = Math.PI / 2;
-      this.goalMarker.add(ring);
-      this.goalMarker.position.set(goalNode.worldPosition[0], goalNode.worldPosition[1] + 0.12, goalNode.worldPosition[2]);
+      const inner = new Mesh(
+        new BoxGeometry(0.4, 0.045, 0.4),
+        new MeshStandardMaterial({ color: '#ece7d8', emissive: '#cbc3b1', emissiveIntensity: 0.12 })
+      );
+      inner.position.y = 0.055;
+      this.goalMarker.add(outer, inner);
+      this.goalMarker.position.set(goalNode.worldPosition[0], goalNode.worldPosition[1] + 0.05, goalNode.worldPosition[2]);
       this.scene.add(this.goalMarker);
     }
   }
@@ -287,17 +286,17 @@ export class SceneManager {
   syncRuntime(runtime: LevelRuntimeLike): void {
     this.applyAnchors(runtime.anchors);
     this.updateGraph(runtime.graph);
-    this.updateNodeHighlights(runtime.currentNodeId, runtime.level.goalNodeId);
+    this.updateNodeHighlights(runtime.currentNodeId, runtime.level.goalNodeId, runtime.graph);
     this.updateInteractableVisuals(runtime.level, runtime.interactableValues);
 
     const goalNode = runtime.graph.nodes[runtime.level.goalNodeId];
     if (goalNode) {
-      this.goalMarker.position.set(goalNode.worldPosition[0], goalNode.worldPosition[1] + 0.12, goalNode.worldPosition[2]);
+      this.goalMarker.position.set(goalNode.worldPosition[0], goalNode.worldPosition[1] + 0.05, goalNode.worldPosition[2]);
     }
   }
 
   setPlayerPosition(position: [number, number, number]): void {
-    this.playerMesh.position.set(position[0], position[1] + 0.34, position[2]);
+    this.playerMesh.position.set(position[0], position[1] + 0.11, position[2]);
   }
 
   pulseInteractable(interactableId: string, t: number): void {
@@ -326,11 +325,11 @@ export class SceneManager {
     }
 
     const material = mesh.material as MeshStandardMaterial;
-    material.emissive.set('#ff3f62');
-    material.color.set('#d5507a');
+    material.emissive.set('#d96f66');
+    material.color.set('#cf8066');
     setTimeout(() => {
-      material.emissive.set('#4f75f5');
-      material.color.set('#5b7af9');
+      material.emissive.set('#6e8192');
+      material.color.set('#8ba3ba');
     }, 220);
   }
 
@@ -395,27 +394,36 @@ export class SceneManager {
     }
   }
 
-  private updateNodeHighlights(currentNodeId: string, goalNodeId: string): void {
+  private updateNodeHighlights(currentNodeId: string, goalNodeId: string, graph: WalkGraph): void {
+    const directReachable = new Set((graph.adjacency[currentNodeId] ?? []).map((edge) => edge.to));
+
     for (const [nodeId, mesh] of this.nodeMeshes.entries()) {
       const material = mesh.material as MeshStandardMaterial;
 
       if (nodeId === goalNodeId) {
-        material.color.set('#7de7f2');
-        material.emissive.set('#7de7f2');
-        material.emissiveIntensity = 0.5;
+        material.color.set('#d0b788');
+        material.emissive.set('#ae9362');
+        material.emissiveIntensity = 0.28;
         continue;
       }
 
       if (nodeId === currentNodeId) {
-        material.color.set('#ffe196');
-        material.emissive.set('#ffd778');
-        material.emissiveIntensity = 0.65;
+        material.color.set('#d7d0bf');
+        material.emissive.set('#b5ac97');
+        material.emissiveIntensity = 0.3;
         continue;
       }
 
-      material.color.set('#5b7af9');
-      material.emissive.set('#4f75f5');
-      material.emissiveIntensity = 0.18;
+      if (directReachable.has(nodeId)) {
+        material.color.set('#9cad97');
+        material.emissive.set('#7f8f7b');
+        material.emissiveIntensity = 0.22;
+        continue;
+      }
+
+      material.color.set('#8ba3ba');
+      material.emissive.set('#6e8192');
+      material.emissiveIntensity = 0.12;
     }
   }
 
@@ -423,9 +431,27 @@ export class SceneManager {
     this.edgeGroup.clear();
 
     const materialForKind = {
-      real: new LineBasicMaterial({ color: '#96a8ff' }),
-      conditional: new LineBasicMaterial({ color: '#9ff0bf' }),
-      illusory: new LineBasicMaterial({ color: '#ffdf9c' })
+      real: new MeshStandardMaterial({
+        color: '#9baab5',
+        emissive: '#7a858d',
+        emissiveIntensity: 0.08,
+        roughness: 0.72,
+        metalness: 0.02
+      }),
+      conditional: new MeshStandardMaterial({
+        color: '#97a997',
+        emissive: '#748373',
+        emissiveIntensity: 0.1,
+        roughness: 0.7,
+        metalness: 0.02
+      }),
+      illusory: new MeshStandardMaterial({
+        color: '#bea174',
+        emissive: '#967d57',
+        emissiveIntensity: 0.14,
+        roughness: 0.68,
+        metalness: 0.03
+      })
     };
 
     const dedupe = new Set<string>();
@@ -445,13 +471,26 @@ export class SceneManager {
           continue;
         }
 
-        const geometry = new BufferGeometry().setFromPoints([
-          new Vector3(fromNode.worldPosition[0], fromNode.worldPosition[1] + 0.15, fromNode.worldPosition[2]),
-          new Vector3(toNode.worldPosition[0], toNode.worldPosition[1] + 0.15, toNode.worldPosition[2])
-        ]);
+        const fromPos = new Vector3(
+          fromNode.worldPosition[0],
+          fromNode.worldPosition[1] + 0.02,
+          fromNode.worldPosition[2]
+        );
+        const toPos = new Vector3(
+          toNode.worldPosition[0],
+          toNode.worldPosition[1] + 0.02,
+          toNode.worldPosition[2]
+        );
 
-        const line = new Line(geometry, materialForKind[edge.kind]);
-        this.edgeGroup.add(line);
+        const length = fromPos.distanceTo(toPos);
+        if (length < 0.001) {
+          continue;
+        }
+
+        const bridge = new Mesh(new BoxGeometry(0.16, 0.042, length), materialForKind[edge.kind]);
+        bridge.position.copy(fromPos).add(toPos).multiplyScalar(0.5);
+        bridge.lookAt(toPos);
+        this.edgeGroup.add(bridge);
       }
     }
   }
@@ -467,7 +506,69 @@ export class SceneManager {
       const stateIndex = interactable.states.findIndex((state) => scalarKey(state.value) === value);
       const material = mesh.material as MeshStandardMaterial;
 
-      material.emissiveIntensity = 0.35 + (Math.max(0, stateIndex) % 4) * 0.14;
+      material.emissiveIntensity = 0.24 + (Math.max(0, stateIndex) % 4) * 0.11;
     }
+  }
+
+  private createPlayerAvatar(): Group {
+    const root = new Group();
+    root.name = 'player-avatar';
+
+    const robeMaterial = new MeshStandardMaterial({
+      color: '#f4f4ef',
+      emissive: '#dbdbd1',
+      emissiveIntensity: 0.14,
+      roughness: 0.68,
+      metalness: 0.02
+    });
+    const trimMaterial = new MeshStandardMaterial({
+      color: '#2f4859',
+      emissive: '#253a48',
+      emissiveIntensity: 0.1,
+      roughness: 0.56,
+      metalness: 0.04
+    });
+    const skinMaterial = new MeshStandardMaterial({
+      color: '#f1dac2',
+      emissive: '#d8c0a8',
+      emissiveIntensity: 0.08,
+      roughness: 0.72,
+      metalness: 0
+    });
+    const accentMaterial = new MeshStandardMaterial({
+      color: '#f0a15f',
+      emissive: '#dc8f51',
+      emissiveIntensity: 0.2,
+      roughness: 0.6,
+      metalness: 0.02
+    });
+    const eyeMaterial = new MeshStandardMaterial({
+      color: '#f8fbff',
+      emissive: '#f8fbff',
+      emissiveIntensity: 0.35,
+      roughness: 0.3,
+      metalness: 0
+    });
+
+    const base = new Mesh(new CylinderGeometry(0.085, 0.1, 0.03, 20), accentMaterial);
+    base.position.y = 0.015;
+    const robe = new Mesh(new ConeGeometry(0.1, 0.24, 18), robeMaterial);
+    robe.position.y = 0.14;
+    const robeBand = new Mesh(new CylinderGeometry(0.08, 0.08, 0.025, 18), trimMaterial);
+    robeBand.position.y = 0.05;
+
+    const head = new Mesh(new SphereGeometry(0.05, 20, 20), skinMaterial);
+    head.position.set(0, 0.285, 0);
+
+    const hood = new Mesh(new ConeGeometry(0.075, 0.15, 16), trimMaterial);
+    hood.position.set(0.008, 0.37, 0.012);
+    hood.rotation.z = 0.38;
+    hood.rotation.x = -0.18;
+
+    const eye = new Mesh(new SphereGeometry(0.015, 12, 12), eyeMaterial);
+    eye.position.set(0.035, 0.365, 0.06);
+
+    root.add(base, robe, robeBand, head, hood, eye);
+    return root;
   }
 }

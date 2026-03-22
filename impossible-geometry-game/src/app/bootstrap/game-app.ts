@@ -34,6 +34,8 @@ declare global {
 }
 
 export class GameApp {
+  private readonly debugMode = new URLSearchParams(window.location.search).get('debug') === '1';
+
   private readonly stateMachine = new GameStateMachine();
 
   private readonly loader = new LevelLoader();
@@ -66,12 +68,16 @@ export class GameApp {
 
   private hintShown = false;
 
+  private objectiveTimer?: number;
+
   constructor(appRoot: HTMLElement) {
     const stage = document.createElement('div');
     stage.className = 'scene-stage';
     appRoot.append(stage);
 
-    this.sceneManager = new SceneManager(stage);
+    this.sceneManager = new SceneManager(stage, {
+      reserveSideDock: this.debugMode
+    });
 
     this.input = new InputManager(
       this.sceneManager.renderer,
@@ -82,20 +88,26 @@ export class GameApp {
     );
     this.input.setEnabled(false);
 
-    this.ui = new GameUI(appRoot, {
-      onStartJourney: () => this.openLevelSelect(),
-      onSelectLevel: (levelId) => this.startLevel(levelId),
-      onTogglePause: () => this.togglePause(),
-      onResetLevel: () => this.resetCurrentLevel(),
-      onBackToLevelSelect: () => this.openLevelSelect(),
-      onBackToMainMenu: () => this.showMainMenu(),
-      onOpenSettings: () => this.ui.showSettings(),
-      onCloseSettings: () => this.ui.hideSettings(),
-      onSettingPatch: (patch) => this.patchSettings(patch),
-      onNextLevel: () => this.goToNextLevel(),
-      onInteractablePanel: (interactableId) => this.tryInteract(interactableId),
-      onMoveNodePanel: (nodeId) => this.tryMoveToNode(nodeId)
-    });
+    this.ui = new GameUI(
+      appRoot,
+      {
+        onStartJourney: () => this.openLevelSelect(),
+        onSelectLevel: (levelId) => this.startLevel(levelId),
+        onTogglePause: () => this.togglePause(),
+        onResetLevel: () => this.resetCurrentLevel(),
+        onBackToLevelSelect: () => this.openLevelSelect(),
+        onBackToMainMenu: () => this.showMainMenu(),
+        onOpenSettings: () => this.ui.showSettings(),
+        onCloseSettings: () => this.ui.hideSettings(),
+        onSettingPatch: (patch) => this.patchSettings(patch),
+        onNextLevel: () => this.goToNextLevel(),
+        onInteractablePanel: (interactableId) => this.tryInteract(interactableId),
+        onMoveNodePanel: (nodeId) => this.tryMoveToNode(nodeId)
+      },
+      {
+        debugMode: this.debugMode
+      }
+    );
 
     this.saveService = new SaveService(orderedLevels[0].id);
     this.saveData = this.saveService.load();
@@ -158,6 +170,7 @@ export class GameApp {
   };
 
   private showMainMenu(): void {
+    this.clearObjectiveTimer();
     this.stateMachine.setAppState('mainMenu');
     this.stateMachine.setPlayState('idle');
     this.input.setEnabled(false);
@@ -165,6 +178,7 @@ export class GameApp {
   }
 
   private openLevelSelect(): void {
+    this.clearObjectiveTimer();
     this.stateMachine.setAppState('levelSelect');
     this.stateMachine.setPlayState('idle');
     this.input.setEnabled(false);
@@ -193,6 +207,9 @@ export class GameApp {
 
     this.sceneManager.applyLevelCamera(level);
     this.runtime.rebuild(this.sceneManager.camera, this.sceneManager.aspect);
+    const cameraFitPoints = Object.values(this.runtime.graph.nodes).map((node) => node.worldPosition);
+    this.sceneManager.applyLevelCamera(level, cameraFitPoints);
+    this.runtime.rebuild(this.sceneManager.camera, this.sceneManager.aspect);
     this.sceneManager.loadLevel(this.runtime);
 
     this.movement.teleport(this.runtime.getCurrentNodePosition());
@@ -210,6 +227,7 @@ export class GameApp {
     this.syncControlPanels();
     this.ui.setNodeEnabled(true);
     this.ui.setInteractableEnabled(true);
+    this.showTransientObjective();
   }
 
   private onTargetClick(target: HitTarget): void {
@@ -255,6 +273,13 @@ export class GameApp {
       return;
     }
 
+    if (this.isStandingOnAffectedAnchor(interactableId)) {
+      this.audioService.ping('error');
+      this.sceneManager.flashInvalidNode(this.runtime.currentNodeId);
+      this.ui.notify('角色站在受影响平台上，无法操作该机关');
+      return;
+    }
+
     const step = this.interactionSystem.createStep(interactableId, this.saveData.settings.reducedMotion);
     this.stateMachine.setPlayState('interacting');
     this.ui.setNodeEnabled(false);
@@ -274,6 +299,8 @@ export class GameApp {
         this.interactionSystem.commit(step);
         this.runtime.rebuild(this.sceneManager.camera, this.sceneManager.aspect);
         this.sceneManager.syncRuntime(this.runtime);
+        this.movement.teleport(this.runtime.getCurrentNodePosition());
+        this.sceneManager.setPlayerPosition(this.runtime.getCurrentNodePosition());
         this.syncControlPanels();
         this.stateMachine.setPlayState('idle');
         this.ui.setNodeEnabled(true);
@@ -384,9 +411,28 @@ export class GameApp {
   }
 
   private resetStallTimer(): void {
+    this.clearObjectiveTimer();
     this.stalledMs = 0;
     this.hintShown = false;
     this.ui.hideHint();
+  }
+
+  private showTransientObjective(): void {
+    this.clearObjectiveTimer();
+    this.ui.showHint('目标：抵达终点环');
+    this.objectiveTimer = window.setTimeout(() => {
+      this.objectiveTimer = undefined;
+      if (this.stateMachine.appState === 'playing' && !this.hintShown) {
+        this.ui.hideHint();
+      }
+    }, 2000);
+  }
+
+  private clearObjectiveTimer(): void {
+    if (this.objectiveTimer !== undefined) {
+      window.clearTimeout(this.objectiveTimer);
+      this.objectiveTimer = undefined;
+    }
   }
 
   private getNextLevel(currentLevelId: string): LevelDef | undefined {
@@ -410,14 +456,9 @@ export class GameApp {
     );
     const nodeItems: ReachableNodeItem[] = reachableIds
       .sort((a, b) => a.localeCompare(b))
-      .map((nodeId) => ({
+      .map((nodeId, index) => ({
         id: nodeId,
-        label:
-          nodeId === this.runtime?.level.goalNodeId
-            ? `终点 · ${nodeId}`
-            : nodeId === this.runtime?.level.spawnNodeId
-              ? `起点 · ${nodeId}`
-              : `节点 · ${nodeId}`
+        label: nodeId === this.runtime?.level.goalNodeId ? '终点平台' : `可达平台 ${index + 1}`
       }));
     this.ui.updateReachableNodes(nodeItems);
 
@@ -428,6 +469,25 @@ export class GameApp {
     }));
 
     this.ui.updateInteractables(items);
+  }
+
+  private isStandingOnAffectedAnchor(interactableId: string): boolean {
+    if (!this.runtime) {
+      return false;
+    }
+
+    const runtime = this.runtime;
+    const currentNode = runtime.level.nodes.find((node) => node.id === runtime.currentNodeId);
+    if (!currentNode) {
+      return false;
+    }
+
+    const interactable = runtime.getInteractable(interactableId);
+    if (!interactable.effects) {
+      return false;
+    }
+
+    return Object.keys(interactable.effects).includes(currentNode.anchorId);
   }
 
   private resolveInteractableLabel(interactable: InteractableDef): string {
